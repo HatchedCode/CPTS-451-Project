@@ -49,7 +49,10 @@ def parseUserData():
             outfile.write(cleanStr4SQL(data['average_stars'])+'\t') #average_stars
             outfile.write(cleanStr4SQL(data['cool'])+'\t') #cool
             outfile.write(cleanStr4SQL(data['fans'])+'\t') #fans
+            
+            # Friends is an array and needs to parse the strings inside of it
             outfile.write(cleanStr4SQL(data['friends'])+'\t') #friends
+            
             outfile.write(cleanStr4SQL(data['funny'])+'\t') #funny
             outfile.write(cleanStr4SQL(data['name'])+'\t') #name
             outfile.write(cleanStr4SQL(data['tipcount'])+'\t') #tipcount
@@ -74,6 +77,8 @@ def parseCheckinData():
         while line:
             data = json.loads(line)
             outfile.write(cleanStr4SQL(data['business_id'])+'\t') #business_id
+            
+            #Need to split this string and extract check-in timestamps for the business
             outfile.write(cleanStr4SQL(data['date'])+'\t') #date
             
             line = f.readline()
