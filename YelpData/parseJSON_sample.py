@@ -121,7 +121,7 @@ def parseCheckinData():
         outfile = open('checkin.txt', 'w')
         line = f.readline()
         count_line = 0
-        outfile.write("HEADER: (business_id : (year, month, day, time))\n")
+        outfile.write("HEADER: (business_id : (year, month, day), time)\n")
         # read each JSON object and extract data
         while line:
             outfile.write(str(count_line + 1) + "-  ")
@@ -144,25 +144,34 @@ def parseCheckinData():
 # Based on the JSON file, this one looks to be complete already
 def parseTipData():
     #write code to parse yelp_tip.JSON
-#    with open('yelp_tip.JSON', 'r') as f:
-#        outfile = open('tip.txt', 'w')
-#        line = f.readline()
-#        count_line = 0
-#        # read each JSON object and extract data
-#        while line:
-#            data = json.loads(line)
-#            outfile.write(cleanStr4SQL(data['business_id'])+'\t') #business_id
-#            outfile.write(cleanStr4SQL(data['date'])+'\t') #date
-#            outfile.write(cleanStr4SQL(data['likes'])+'\t') #likes
-#            outfile.write(cleanStr4SQL(data['text'])+'\t') #text
-#            outfile.write(cleanStr4SQL(data['user_id'])+'\t') #user_id
-#            
-#            line = f.readline()
-#            count_line += 1
-#    print(count_line)
-#    outfile.close()
-#    f.close()
-    pass
+   with open('yelp_tip.JSON', 'r') as f:
+       outfile = open('tip.txt', 'w')
+       line = f.readline()
+       count_line = 0
+       outfile.write("HEADER: (business_id : (year, month, day), likes, text, user_id)\n")
+       # read each JSON object and extract data
+       while line:
+           outfile.write(str(count_line + 1) + "-  ")
+           outfile.write('business_id: ')
+           data = json.loads(line)
+           outfile.write(cleanStr4SQL(data['business_id'])+'\t') #business_id
+           outfile.write('\n\tdate (year, month, day, time): ')
+           (day,time) = cleanStr4SQL(data['date']).split(' ') #Split the day and the time
+           (year,month,day) = day.split('-') #Split the day into the year, month, and day.
+           outfile.write(str((year, month, day, time))+'   ')  #Print to the file           
+           outfile.write('\n\tlikes: ')
+           outfile.write(str(data['likes'])+'\t') #likes
+           outfile.write('\n\ttext: ')
+           outfile.write(cleanStr4SQL(data['text'])+'\t') #text
+           outfile.write('\n\tuser_id: ')           
+           outfile.write(cleanStr4SQL(data['user_id'])+'\t') #user_id
+           outfile.write('\n')
+
+           line = f.readline()
+           count_line += 1
+   print(count_line)
+   outfile.close()
+   f.close()
 
 #REMOVE PASS TO RUN THE OTHER FUNCTIONS
 parseBusinessData()
