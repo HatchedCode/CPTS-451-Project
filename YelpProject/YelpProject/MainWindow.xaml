@@ -5,8 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:YelpProject"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Yelp App" Height="450" Width="800">
     <Grid>
-        
+        <Label x:Name="Statelabel" Content="State" HorizontalAlignment="Left" FontSize="14" Margin="247,23,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.502,0.5"/>
+        <Label x:Name="Citylabel" Content="City" HorizontalAlignment="Left" FontSize="14" Margin="247,79,0,0" VerticalAlignment="Top"/>
+        <ComboBox x:Name="Statelist" Margin="316,23,263,0" FontSize="14" VerticalAlignment="Top" SelectionChanged="Statelist_SelectionChanged"/>
+        <ComboBox x:Name="Citylist" Margin="316,83,263,0" FontSize="14" VerticalAlignment="Top" SelectionChanged="Citylist_SelectionChanged"/>
+        <DataGrid x:Name="Businessgrid" Height="270" Margin="106,139,106,0" FontSize="14" VerticalAlignment="Top"/>
+
     </Grid>
 </Window>
