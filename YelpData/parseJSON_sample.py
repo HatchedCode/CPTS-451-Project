@@ -104,7 +104,9 @@ def parseUserData():
           outfile.write('(' + str(data['funny']) + ',' + str(data['useful']) + ',' + str(data['cool']) +'); ') #(funny,useful,cool)
           # Friends is an array and needs to parse the strings inside of it
           outfile.write("friends: ")
-          outfile.write(str(data['friends'])+'\t') #friends
+          friends = (data['friends'])
+          outfile.write(str([item for item in friends]))  # friend list
+          #outfile.write(str(data['friends'])+'\t') #friends
 
 
           outfile.write('\n')
