@@ -83,34 +83,37 @@ def parseBusinessData():
     f.close()
 
 def parseUserData():
-    #write code to parse yelp_user.JSON
-#    with open('yelp_user.JSON', 'r') as f:
-#        outfile = open('user.txt', 'w')
-#        line = f.readline()
-#        count_line = 0
-#        # read each JSON object and extract data
-#        while line:
-#            data = json.loads(line)
-#            outfile.write(cleanStr4SQL(data['average_stars'])+'\t') #average_stars
-#            outfile.write(cleanStr4SQL(data['cool'])+'\t') #cool
-#            outfile.write(cleanStr4SQL(data['fans'])+'\t') #fans
-#            
-#            # Friends is an array and needs to parse the strings inside of it
-#            outfile.write(cleanStr4SQL(data['friends'])+'\t') #friends
-#            
-#            outfile.write(cleanStr4SQL(data['funny'])+'\t') #funny
-#            outfile.write(cleanStr4SQL(data['name'])+'\t') #name
-#            outfile.write(cleanStr4SQL(data['tipcount'])+'\t') #tipcount
-#            outfile.write(cleanStr4SQL(data['useful'])+'\t') #useful
-#            outfile.write(cleanStr4SQL(data['user_id'])+'\t') #user_id
-#            outfile.write(cleanStr4SQL(data['yelping_since'])+'\t') #yelping_since
-#            
-#            line = f.readline()
-#            count_line += 1
-#    print(count_line)
-#    outfile.close()
-#    f.close()
-    pass
+    # write code to parse yelp_user.JSON
+    with open('yelp_user.JSON', 'r') as f:
+      outfile = open('user.txt', 'w')
+      line = f.readline()
+      count_line = 0
+      # read each JSON object and extract data
+      outfile.write(
+          "HEADER: (user_id; name;  yelping_since; tipcount; fans; average_stars; (funny,useful,cool))\n")
+
+      while line:
+          data = json.loads(line)
+          outfile.write(str(count_line) + "- user info: ")
+          outfile.write(cleanStr4SQL(data['user_id'])+'; ') #user_id
+          outfile.write(cleanStr4SQL(data['name'])+'; ') #name
+          outfile.write(cleanStr4SQL(data['yelping_since'])+'; ') #yelping_since
+          outfile.write(str(data['tipcount'])+'; ') #tipcount
+          outfile.write(str(data['fans'])+'; ') #fans
+          outfile.write(str(data['average_stars'])+'; ') #average_stars
+          outfile.write('(' + str(data['funny']) + ',' + str(data['useful']) + ',' + str(data['cool']) +'); ') #(funny,useful,cool)
+          # Friends is an array and needs to parse the strings inside of it
+          outfile.write("friends: ")
+          outfile.write(str(data['friends'])+'\t') #friends
+
+
+          outfile.write('\n')
+
+          line = f.readline()
+          count_line += 1
+    print(count_line)
+    outfile.close()
+    f.close()
 
 #parse yelp_checkin.JSON
 def parseCheckinData():
