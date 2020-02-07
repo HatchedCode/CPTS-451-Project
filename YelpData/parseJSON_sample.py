@@ -27,7 +27,6 @@ def attParser(mydict):
     
 #hours are inside a dictionary and the hours are seperated by '-'
 def hourParser(mydict, file):
-    mylist = []
     for key, item in mydict.items(): #Access the first dictionary; get key and item
         str(item) #typecast the item into a string
         mylist.append(tuple((str(key), item.split('-')))) #make into a tuple and append to list     
@@ -44,20 +43,20 @@ def parseBusinessData():
         line = f.readline()
         count_line = 0
         #read each JSON abject and extract data
-        outfile.write("HEADER: (business_id, name; address; state; state; city; postal_code; latitude; longitude; stars; is_open)\n")
+        outfile.write("HEADER: (business_id; name; address; state; state; city; postal_code; latitude; longitude; stars; is_open)\n")
         while line:
             data = json.loads(line)
             outfile.write(str(count_line + 1) + "- business info: ")
-            outfile.write(cleanStr4SQL(data['business_id'])+'\t') #business id
-            outfile.write(cleanStr4SQL(data['name'])+'\t') #name
-            outfile.write(cleanStr4SQL(data['address'])+'\t') #full_address
-            outfile.write(cleanStr4SQL(data['state'])+'\t') #state
-            outfile.write(cleanStr4SQL(data['city'])+'\t') #city
-            outfile.write(cleanStr4SQL(data['postal_code']) + '\t')  #zipcode
-            outfile.write(str(data['latitude'])+'\t') #latitude
-            outfile.write(str(data['longitude'])+'\t') #longitude
-            outfile.write(str(data['stars'])+'\t') #stars
-            outfile.write(str(data['review_count'])+'\t') #reviewcount
+            outfile.write(cleanStr4SQL(data['business_id'])+ '; ') #business id
+            outfile.write(cleanStr4SQL(data['name'])+ '; ') #name
+            outfile.write(cleanStr4SQL(data['address'])+ '; ') #full_address
+            outfile.write(cleanStr4SQL(data['state'])+ '; ') #state
+            outfile.write(cleanStr4SQL(data['city'])+'; ') #city
+            outfile.write(cleanStr4SQL(data['postal_code']) + '; ')  #zipcode
+            outfile.write(str(data['latitude'])+'; ') #latitude
+            outfile.write(str(data['longitude'])+'; ') #longitude
+            outfile.write(str(data['stars'])+'; ') #stars
+            outfile.write(str(data['review_count'])+'; ') #reviewcount
             outfile.write(str(data['is_open'])+'\n') #openstatus
             
             #parsing categories
@@ -74,6 +73,7 @@ def parseBusinessData():
             #parsing hours
             outfile.write("\thours: ")
             hourParser(data['hours'], outfile)
+            mylist = []
             outfile.write('\n');
 
             line = f.readline()
