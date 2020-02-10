@@ -43,7 +43,7 @@ def parseBusinessData():
         line = f.readline()
         count_line = 0
         #read each JSON abject and extract data
-        outfile.write("HEADER: (business_id; name; address; state; state; city; postal_code; latitude; longitude; stars; is_open)\n")
+        outfile.write("HEADER: (business_id; name; address; state; state; city; postal_code; latitude; longitude; stars; review_count; is_open)\n")
         while line:
             data = json.loads(line)
             outfile.write(str(count_line + 1) + "- business info: ")
