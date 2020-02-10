@@ -1,0 +1,22 @@
+﻿<Window x:Class="YelpProject.Window1"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:YelpProject"
+        mc:Ignorable="d"
+        Title="BusinessDetails" Height="450" Width="800">
+    <Grid>
+        <Label x:Name="businessName" Content="Business Name" HorizontalAlignment="Left" Margin="163,64,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="businessState" Content="State" HorizontalAlignment="Left" Margin="163,114,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="businessCity" Content="City" HorizontalAlignment="Left" Margin="163,165,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="bname" HorizontalAlignment="Left" Height="23" Margin="319,64,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="354"/>
+        <TextBox x:Name="state" HorizontalAlignment="Left" Height="23" Margin="319,114,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="354"/>
+        <TextBox x:Name="city" HorizontalAlignment="Left" Height="23" Margin="319,165,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="354"/>
+        <Label x:Name="cityNum" Content="Number of businesses in the same city" HorizontalAlignment="Left" Margin="163,227,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="stateNum" Content="Number of businesses in the same state" HorizontalAlignment="Left" Margin="163,273,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="numinCity" Content="_______________________________" HorizontalAlignment="Left" Margin="419,227,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="numinState" Content="_______________________________" HorizontalAlignment="Left" Margin="419,273,0,0" VerticalAlignment="Top"/>
+
+    </Grid>
+</Window>

@@ -101,69 +101,66 @@ namespace YelpProject
             Businessgrid.Items.Add(new Business() { name = "KFC", state = "CA", city = "Los Angeles" });
         }
 
+        private void executeQuery(string sqlstr, Action<NpgsqlDataReader> myf)
+        {
+            using (var connection = new NpgsqlConnection(buildConnectionString()))
+            {
+                connection.Open();
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+                    cmd.CommandText = sqlstr;
+                    try
+                    {
+                        var reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            myf(reader);
+                        }
+                    }
+                    catch (NpgsqlException ex)
+                    {
+                        Console.WriteLine(ex.Message.ToString());
+                        System.Windows.MessageBox.Show("SQL Error - " + ex.Message.ToString());
+                    }
+                    finally
+                    {
+                        connection.Close();
+                    }
+                }
+            }
+        }
+
+        private void addCity(NpgsqlDataReader R)
+        {
+            Citylist.Items.Add(R.GetString(0));
+        }
+
         private void Statelist_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            /* Making the connection to SQL 19:57
-             * Citylist.Items.Clear();
-             * if (Statelist.SelectedIndex > -1)
-             * {
-                 * using (var connection = new NpgsqlConnection(buildConnectionString()))
-                 * {
-                 *      connection.Open();
-                 *      using (var cmd = new NpgsqlCommand())
-                 *      {
-                 *          cmd.Connection = connection
-                 *          cmd.CommandText = "SELECT distinct city FROM business WHERE state = '" + Statelist.SelectedItem.ToString() + "' ORDER BY city";
-                 *          try 
-                 *          { 
-                 *              var reader = cmd.ExecuteReader();
-                 *              while(reader.Read())
-                 *                  Citylist.Items.Add(reader.GetString(0));
-                 *          } catch (NgsqlException ex)
-                 *          {
-                 *              Console.WriteLine(ex.Message.ToString());
-                 *              System.Windows.MessageBox.Show("SQL Error - " + ex.Message.ToString()); 
-                 *          } finally
-                 *          {
-                 *              connection.Close();
-                 *          }
-                 *      }
-                 * }
-             * }
-             */
+            Citylist.Items.Clear();
+            if (Statelist.SelectedIndex > -1)
+            {
+                string sqlstr = "SELECT distinct city FROM business WHERE state = '" + Statelist.SelectedItem.ToString() + "' ORDER BY city";
+                executeQuery(sqlstr, addCity);
+            }
+        }
+
+        private void addGridRow(NpgsqlDataReader R)
+        {
+            Businessgrid.Items.Add(new Business() { name = R.GetString(0), state = R.GetString(1), city = R.GetString(2) });
         }
 
         private void Citylist_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            /* Making the connection to SQL 44:00
-             * businessGrid.Items.Clear();
-             * if (Citylist.SelectedIndex > -1)
-             * {
-                 * using (var connection = new NpgsqlConnection(buildConnectionString()))
-                 * {
-                 *      connection.Open();
-                 *      using (var cmd = new NpgsqlCommand())
-                 *      {
-                 *          cmd.Connection = connection
-                 *          cmd.CommandText = "SELECT name, state, city FROM business WHERE state = '" + Statelist.SelectedItem.ToString() + "' AND city = '" + Citylist.SelectedItem.ToString() + "' ORDER BY city;";
-                 *          try 
-                 *          { 
-                 *              var reader = cmd.ExecuteReader();
-                 *              while(reader.Read())
-                 *                  Businessgrid.Items.Add(new Business() { name = reader.GetString(0), state = reader.GetString(1), city = reader.GetString(2) });
-                 *          } catch (NgsqlException ex)
-                 *          {
-                 *              Console.WriteLine(ex.Message.ToString());
-                 *              System.Windows.MessageBox.Show("SQL Error - " + ex.Message.ToString()); 
-                 *          } finally
-                 *          {
-                 *              connection.Close();
-                 *          }
-                 *      }
-                 * }
-             * }
-             */
+            Businessgrid.Items.Clear();
+            if (Citylist.SelectedIndex > -1)
+            {
+                string sqlstr = "SELECT name, state, city FROM business WHERE state = '" + Statelist.SelectedItem.ToString() + "' AND city = '" + Citylist.SelectedItem.ToString() + "' ORDER BY city;";
+                executeQuery(sqlstr, addGridRow);
+            }         
         }
+
     }
 }
 
