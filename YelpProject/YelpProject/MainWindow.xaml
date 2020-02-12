@@ -11,7 +11,7 @@
         <Label x:Name="Citylabel" Content="City" HorizontalAlignment="Left" FontSize="14" Margin="247,79,0,0" VerticalAlignment="Top"/>
         <ComboBox x:Name="Statelist" Margin="316,23,263,0" FontSize="14" VerticalAlignment="Top" SelectionChanged="Statelist_SelectionChanged"/>
         <ComboBox x:Name="Citylist" Margin="316,83,263,0" FontSize="14" VerticalAlignment="Top" SelectionChanged="Citylist_SelectionChanged"/>
-        <DataGrid x:Name="Businessgrid" Height="270" Margin="106,139,106,0" FontSize="14" VerticalAlignment="Top"/>
+        <DataGrid x:Name="Businessgrid" Height="270" Margin="106,139,106,0" FontSize="14" VerticalAlignment="Top" SelectionChanged="businessGrid_SelectionChanged"/>
 
     </Grid>
 </Window>
