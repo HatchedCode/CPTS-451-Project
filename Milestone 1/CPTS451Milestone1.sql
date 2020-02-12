@@ -10,14 +10,6 @@ CREATE TABLE Business (
     businessStars FLOAT,
     is_open INTEGER,
     reviewCount INTEGER,
-    att_name VARCHAR,-----attname-----
-    cat_name VARCHAR,-----categories -----
-    h_day INTEGER,-----hours 
-    h_time INTEGER,-----hours 
-    PRIMARY KEY (businessID),
-    FOREIGN KEY(att_name, businessID) REFERENCES Attributes(att_name, businessID),
-    FOREIGN KEY(cat_name, businessID) REFERENCES Category(cat_name, businessID),
-    FOREIGN KEY(h_day, h_time, businessID) REFERENCES Attributes(h_day, h_time, businessID)
 );
 
 CREATE TABLE Tip (
