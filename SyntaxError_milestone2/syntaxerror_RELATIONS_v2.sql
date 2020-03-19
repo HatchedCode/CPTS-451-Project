@@ -11,6 +11,8 @@ CREATE TABLE Business(
 	latitude FLOAT,
 	busCity VARCHAR,
 	is_Open INTEGER,
+    numTips INTEGER,
+    numCheckins INTEGER,
 	PRIMARY KEY (businessID)
 );
 
@@ -91,4 +93,4 @@ CREATE TABLE Check_in(
     FOREIGN KEY(businessID) REFERENCES Business(businessID)
 	FOREIGN KEY(user_id) REFERENCES User(user_id)
 );
-/*Check_in Portion of the ER Model Begins*/
+/*Check_in Portion of the ER Model Ends*/
