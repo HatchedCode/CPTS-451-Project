@@ -100,10 +100,11 @@ def insert2CategoryTable():
 
             for cat_name in Categories:
                 sql_str_categoryTable = "INSERT INTO CategoryTable (cat_name, businessID) " \
-                        "VALUES ('" + str(cat_name) + "','" + businessID +  "'" + ");"
+                        "VALUES ('" + cleanStr4SQL(cat_name) + "','" + businessID +  "'" + ");"
                 try:
                     cur.execute(sql_str_categoryTable)
-                except:
+                except Exception as e:
+                    print(e)
                     print("Insert to CategoryTable failed!")
                 conn.commit()
                 # optionally you might write the INSERT statement to a file.
@@ -337,7 +338,8 @@ def insert2CheckinTable():
                             "VALUES ('" + str(day) + "','" + str(time) + "','" + str(year) + "','" + str(month) + "','" + str(businessID) + "'" + ");"
                 try:
                     cur.execute(sql_str_checkinTable)
-                except:
+                except Exception as e:
+                    print(e)
                     print("Insert to CheckInTable failed!")
                 conn.commit()
                 # optionally you might write the INSERT statement to a file.
@@ -374,18 +376,19 @@ def insert2TipTable():
         while line:
             data = json.loads(line)
             
-            (day,time) = cleanStr4SQL(data['date']).split(' ') #Split the day and the time
-            (year,month,day) = day.split('-') #Split the day into the year, month, and day.
+            (date,time) = cleanStr4SQL(data['date']).split(' ') #Split the day and the time
+            # (year,month,day) = day.split('-') #Split the day into the year, month, and day.
 
             # Generate the INSERT statement for the cussent business
             # TODO: The below INSERT statement is based on a simple (and incomplete) businesstable schema. Update the statement based on your own table schema and
             # include values for all businessTable attributes
-            sql_str_tipTable = "INSERT INTO TipTable (business_id, user_id, likes, text, (year, month, day)) " \
-                                 "VALUES ('" + data['business_id'] + "','"+ "','" + cleanStr4SQL(data["user_id"])   + "','" + \
-                                    str(data["likes"]) + "','" + cleanStr4SQL(str(data["text"])) + str((year, month, day)) +  "'" + ");"
+            sql_str_tipTable = "INSERT INTO TipTable (businessID, user_id, likes, text, date) " \
+                                 "VALUES ('" + data['business_id'] + "','" + cleanStr4SQL(data["user_id"])  + "','" + \
+                                    str(data["likes"]) + "','" + cleanStr4SQL(data["text"])+ "','" + str(date) +  "'" + ");"
             try:
                 cur.execute(sql_str_tipTable)
-            except:
+            except Exception as e:
+                print(e)
                 print("Insert to TipTable failed!")
             conn.commit()
             # optionally you might write the INSERT statement to a file.
@@ -403,9 +406,9 @@ def insert2TipTable():
     outfile.close()  #uncomment this line if you are writing the INSERT statements to an output file.
     f.close()
     
-    
-#insert2BusinessTable()
-#insert2UserTable()
+
+insert2BusinessTable()
+insert2UserTable()
 insert2CheckinTable()
 insert2TipTable()
 insert2FriendTable()
