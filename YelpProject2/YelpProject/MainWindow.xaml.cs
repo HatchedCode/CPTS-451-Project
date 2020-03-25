@@ -23,6 +23,7 @@ namespace YelpProject
         public MainWindow()
         {
             InitializeComponent();
+            addColumns2BusinessGrid();
             addStates();
         }
 
@@ -107,22 +108,18 @@ namespace YelpProject
         private void addColumns2BusinessGrid()
         {
             DataGridTextColumn col1 = new DataGridTextColumn(); // name
-            DataGridTextColumn col2 = new DataGridTextColumn(); // id
 
             col1.Binding = new Binding("name");
             col1.Header = "Business Name";
-            col1.Width = 230;
+            col1.Width = 330;
             businessGrid.Columns.Add(col1);
-
-            col2.Binding = new Binding("bid");
-            col2.Header = "ID";
-            col2.Width = 100;
-            businessGrid.Columns.Add(col2);
+            businessGrid.CanUserResizeColumns = false;
+            businessGrid.CanUserResizeRows = false;
         }
 
         private void queryBusiness(NpgsqlDataReader R)
         {
-            businessGrid.Items.Add(new Business() { name = R.GetString(0), bid = R.GetString(1) });
+            businessGrid.Items.Add(new Business() { name = R.GetString(0) });
         }
 
         private void zipList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -144,13 +141,35 @@ namespace YelpProject
 
         private void categoryListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            businessGrid.Items.Clear();
-            for (int i = 0; i < categoryListBox.Items.Count; i++)
+/*            businessGrid.Items.Clear();
+            string sqlstr1 = "SELECT busName, businessID FROM BusinessTable WHERE busPostal = '" + 85086.ToString() + "' ORDER BY busPostal";
+            string sqlstr = "SELECT distinct bus.busName, bus.businessID FROM (" +
+                sqlstr1 + ") as bus FULL OUTER JOIN CategoryTable ON CategoryTable.businessID = bus.businessID AND CategoryTable.cat_name = '" + "Acne Treatment" + "' ORDER BY bus.busName, bus.businessID";
+            executeQuery(sqlstr, queryBusiness);*/
+            /*            for (int i = 0; i < categoryListBox.SelectedItems.Count; i++)
+                        {
+                            MessageBox.Show("categoryListBox_SelectionChanged(): ", zipList.SelectedItem.ToString(), MessageBoxButton.OK);
+                            string sqlstr1 = "SELECT busName, businessID FROM BusinessTable WHERE busPostal = '" + zipList.SelectedItem.ToString() + "' ORDER BY busPostal";
+                            string sqlstr = "SELECT distinct bus.busName, bus.businessID FROM (" +
+                                sqlstr1 + ") as bus FULL OUTER JOIN CategoryTable ON CategoryTable.businessID = bus.businessID AND CategoryTable.cat_name = '" + categoryListBox.SelectedItems[i].ToString() + "' ORDER BY bus.busName, bus.businessID";
+                            executeQuery(sqlstr, queryBusiness);
+                            MessageBox.Show("categoryListBox_SelectionChanged(): ", categoryListBox.Items.Count.ToString(), MessageBoxButton.OK);
+                        }*/
+        }
+        private void queryTips(NpgsqlDataReader R)
+        {
+            tipListBox.Items.Add(R.GetString(0));
+        }
+
+        private void businessGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            tipListBox.Items.Clear();
+            if (businessGrid.Items.IndexOf(businessGrid.SelectedItem) > -1)
             {
-                string sqlstr1 = "SELECT busName, businessID FROM BusinessTable WHERE busPostal = '" + zipList.SelectedItem.ToString() + "' ORDER BY busPostal";
-                string sqlstr = "SELECT distinct busName, businessID, cat_name FROM (" +
-                    sqlstr1 + ") as bus FULL OUTER JOIN CategoryTable ON CategoryTable.businessID = bus.businessID AND CategoryTable.cat_name = '" + categoryListBox.SelectedItems[i].ToString() + "' ORDER BY busName, businessID";
-                executeQuery(sqlstr, queryBusiness);
+                string sqlstr1 = "SELECT businessID FROM BusinessTable WHERE busName = '" + businessGrid.SelectedItem.ToString() + "' ORDER BY busName";
+                string sqlstr = "SELECT distinct text, date FROM (" +
+                    sqlstr1 + ") as bus FULL OUTER JOIN TipTable ON TipTable.businessID = bus.businessID ORDER BY date";
+                executeQuery(sqlstr, queryTips);
             }
         }
     }
