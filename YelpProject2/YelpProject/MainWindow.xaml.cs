@@ -27,7 +27,7 @@ namespace YelpProject
 
         private string buildConnectionString()
         {
-            return "Host = localhost; Username = postgres; Database = milestone2db; password = postgres";
+            return "Host = localhost; Username = postgres; Database = yelpdb; password = postgres";
         }
         private void executeQuery(string sqlstr, Action<NpgsqlDataReader> myfunc)
         {
@@ -64,7 +64,7 @@ namespace YelpProject
 
         private void addStates()
         {
-            string sqlstr = "SELECT distinct state FROM business ORDER BY state";
+            string sqlstr = "SELECT distinct busState FROM BusinessTable ORDER BY busState";
             executeQuery(sqlstr, queryStates);
         }
 
@@ -78,7 +78,7 @@ namespace YelpProject
             cityList.Items.Clear();
             if (stateList.SelectedIndex > -1)
             {
-                string sqlstr = "SELECT distinct city FROM business '" + stateList.SelectedItem.ToString() + "' ORDER BY city";
+                string sqlstr = "SELECT distinct busCity FROM BusinessTable WHERE busState = '" + stateList.SelectedItem.ToString() + "' ORDER BY busCity";
                 executeQuery(sqlstr, queryCity);
             }
         }
@@ -91,9 +91,9 @@ namespace YelpProject
         private void cityList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             zipList.Items.Clear();
-            if (zipList.SelectedIndex > -1)
+            if (cityList.SelectedIndex > -1)
             {
-                string sqlstr = "SELECT distinct postal FROM business WHERE state = '" + stateList.SelectedItem.ToString() + "' AND city = '" + cityList.SelectedItem.ToString() + "' ORDER BY postal";
+                string sqlstr = "SELECT distinct busPostal FROM BusinessTable WHERE busState = '" + stateList.SelectedItem.ToString() + "' AND busCity = '" + cityList.SelectedItem.ToString() + "' ORDER BY busPostal";
                 executeQuery(sqlstr, queryZip);
             }
         }
@@ -106,10 +106,12 @@ namespace YelpProject
         private void zipList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             categoryListBox.Items.Clear();
-            if (categoryListBox.SelectedIndex > -1)
+            if (zipList.SelectedIndex > -1)
             {
                 // Need to make the sql statement to extract category name
-                string sqlstr = "SELECT distinct cat_name FROM category WHERE ";
+                string sqlstr1 = "SELECT businessID FROM BusinessTable WHERE busPostal = '" + zipList.SelectedItem.ToString() + "' ORDER BY busPostal";
+                string sqlstr = "SELECT distinct cat_name FROM (" +
+                    sqlstr1 + ") as bus FULL OUTER JOIN CategoryTable ON CategoryTable.businessID = bus.businessID ORDER BY cat_name";
                 executeQuery(sqlstr, queryCategories);
             }
         }
@@ -134,6 +136,11 @@ namespace YelpProject
         {
             businessGrid.Items.Clear();
             //if (businessGrid.sele)
+        }
+
+        private void categoryListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }
