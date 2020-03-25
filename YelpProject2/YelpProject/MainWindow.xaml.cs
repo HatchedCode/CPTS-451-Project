@@ -18,6 +18,7 @@ namespace YelpProject
             public string state { get; set; }
             public string city { get; set; }
             public string zipcode { get; set; }
+            public string bid { get; set; }
         }
         public MainWindow()
         {
@@ -103,19 +104,6 @@ namespace YelpProject
             categoryListBox.Items.Add(R.GetString(0));
         }
 
-        private void zipList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            categoryListBox.Items.Clear();
-            if (zipList.SelectedIndex > -1)
-            {
-                // Need to make the sql statement to extract category name
-                string sqlstr1 = "SELECT businessID FROM BusinessTable WHERE busPostal = '" + zipList.SelectedItem.ToString() + "' ORDER BY busPostal";
-                string sqlstr = "SELECT distinct cat_name FROM (" +
-                    sqlstr1 + ") as bus FULL OUTER JOIN CategoryTable ON CategoryTable.businessID = bus.businessID ORDER BY cat_name";
-                executeQuery(sqlstr, queryCategories);
-            }
-        }
-
         private void addColumns2BusinessGrid()
         {
             DataGridTextColumn col1 = new DataGridTextColumn(); // name
@@ -134,13 +122,36 @@ namespace YelpProject
 
         private void queryBusiness(NpgsqlDataReader R)
         {
+            businessGrid.Items.Add(new Business() { name = R.GetString(0), bid = R.GetString(1) });
+        }
+
+        private void zipList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            categoryListBox.Items.Clear();
             businessGrid.Items.Clear();
-            //if (businessGrid.sele)
+            if (zipList.SelectedIndex > -1)
+            {
+                // Need to make the sql statement to extract category name
+                string sqlstr1 = "SELECT businessID FROM BusinessTable WHERE busPostal = '" + zipList.SelectedItem.ToString() + "' ORDER BY busPostal";
+                string sqlstr = "SELECT distinct cat_name FROM (" +
+                    sqlstr1 + ") as bus FULL OUTER JOIN CategoryTable ON CategoryTable.businessID = bus.businessID ORDER BY cat_name";
+                executeQuery(sqlstr, queryCategories);
+
+                string sqlstr2 = "SELECT busName, businessID FROM BusinessTable WHERE busPostal = '" + zipList.SelectedItem.ToString() + "' ORDER BY busName, businessID";
+                executeQuery(sqlstr2, queryBusiness);
+            }
         }
 
         private void categoryListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            businessGrid.Items.Clear();
+            for (int i = 0; i < categoryListBox.Items.Count; i++)
+            {
+                string sqlstr1 = "SELECT busName, businessID FROM BusinessTable WHERE busPostal = '" + zipList.SelectedItem.ToString() + "' ORDER BY busPostal";
+                string sqlstr = "SELECT distinct busName, businessID, cat_name FROM (" +
+                    sqlstr1 + ") as bus FULL OUTER JOIN CategoryTable ON CategoryTable.businessID = bus.businessID AND CategoryTable.cat_name = '" + categoryListBox.SelectedItems[i].ToString() + "' ORDER BY busName, businessID";
+                executeQuery(sqlstr, queryBusiness);
+            }
         }
     }
 }
