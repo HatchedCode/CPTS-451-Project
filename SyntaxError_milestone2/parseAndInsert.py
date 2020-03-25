@@ -55,7 +55,8 @@ def insert2BusinessTable():
                       str(data["longitude"]) + "," + str(data["stars"]) + "," + str(data["review_count"]) + "," + str(data["is_open"]) + ", 0, 0" + ");"
             try:
                 cur.execute(sql_str_businessTable)
-            except:
+            except Exception as e:
+                print(e)
                 print("Insert to BusinessTable failed!")
             conn.commit()
             # optionally you might write the INSERT statement to a file.
@@ -152,7 +153,8 @@ def insert2AttritutesTable():
                         "VALUES ('" + att_name + "','" + value  + "','" + businessID +  "'" + ");"
                 try:
                     cur.execute(sql_str_attritutesTable)
-                except:
+                except Exception as e:
+                    print(e)
                     print("Insert to AttributesTable failed!")
                 conn.commit()
                 # optionally you might write the INSERT statement to a file.
@@ -199,7 +201,8 @@ def insert2HoursTable():
                         "VALUES ('" + t_start + "','" + t_end + "','" + h_day  + "','" + businessID +  "'" + ");"
                 try:
                     cur.execute(sql_str_attritutesTable)
-                except:
+                except Exception as e:
+                    print(e)
                     print("Insert to HoursTable failed!")
                 conn.commit()
                 # optionally you might write the INSERT statement to a file.
@@ -243,7 +246,8 @@ def insert2FriendTable():
                             "VALUES ('" + user_id + "','" + cleanStr4SQL(friend) +  "'" + ");"
                     try:
                         cur.execute(sql_str_friendTable)
-                    except:
+                    except Exception as e:
+                        print(e)
                         print("Insert to FriendTable failed!")
                     conn.commit()
                     # optionally you might write the INSERT statement to a file.
@@ -288,7 +292,8 @@ def insert2UserTable():
                             "','" + str(0)  + "','" + str(0) + "','" + str(float(0.0)) + "','" + str(float(0.0)) + "' " + ");"
                 try:
                     cur.execute(sql_str_userTable)
-                except:
+                except Exception as e:
+                    print(e)
                     print("Insert to UserTable failed!")
                 conn.commit()
                 # optionally you might write the INSERT statement to a file.

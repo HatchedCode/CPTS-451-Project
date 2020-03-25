@@ -1,102 +1,168 @@
 /*TRIGGER Statement for numTips Begins*/
 CREATE OR REPLACE FUNCTION updateNumTips() RETURNS trigger AS '
 BEGIN
-    UPDATE Business
-    SET Business.numTips = tipCount.numTips
+    UPDATE BusinessTable
+    SET numTips = tipCount.numTips
     FROM (
-        select Tip.businessID, COUNT(Tip.businessID) as numTips
-        from Tip
-        group by Tip.businessID
+        select TipTable.businessID, COUNT(TipTable.businessID) as numTips
+        from TipTable
+        group by TipTable.businessID
     ) as tipCount
-    WHERE Business.businessID = tipCount.businessID
-    RETURN Business
+    WHERE BusinessTable.businessID = tipCount.businessID;
+    RETURN new;
 END
 ' LANGUAGE plpgsql;
 
 CREATE TRIGGER updateNumTips
-AFTER INSERT ON Business
+AFTER INSERT ON TipTable
 FOR EACH ROW
-WHEN (old.businessID = new.businessID)
+WHEN (new.businessID is not null)
 EXECUTE PROCEDURE updateNumTips();
+/TRIGGER Statement for numTips Ends/
+
+--Test 1
+INSERT INTO TipTable (businessID, user_id, likes, text, date) 
+VALUES ('5KheTjYPu1HcQzQFtm4_vw','jRyO2V1pA4CdVVqCIOPc1Q','32','Testing 1 2 3','2020-12-26');
+
+SELECT * FROM BusinessTable 
+WHERE businessID = '5KheTjYPu1HcQzQFtm4_vw';
+
+--Clean Test 1
+DELETE FROM TipTable
+WHERE businessID = '5KheTjYPu1HcQzQFtm4_vw' AND user_id = 'jRyO2V1pA4CdVVqCIOPc1Q' AND date = '2020-12-26';
+
+DROP TRIGGER updateNumTips on TipTable
 /*TRIGGER Statement for numTips Ends*/
 
 /*TRIGGER Statement for tipCount Begins*/
-CREATE OR REPLACE FUNCTION updateTipCount() RETURNS trigger AS '
+CREATE OR REPLACE FUNCTION updateNewTipCount() RETURNS trigger AS '
 BEGIN
-    UPDATE User
-    SET User.tipcount = tips.tipcount
+    UPDATE UserTable
+    SET tipcount = tips.t_tipcount
     FROM (
-        select Tip.user_id, COUNT(Tip.user_id) as tipcount
-        from Tip
-        group by Tip.user_id
+        select TipTable.user_id, COUNT(TipTable.user_id) as t_tipcount
+        from TipTable
+        group by TipTable.user_id
     ) as tips
-    WHERE User.user_id = tips.user_id
-    RETURN User
+    WHERE UserTable.user_id = tips.user_id;
+    RETURN NEW;
 END
 ' LANGUAGE plpgsql;
 
 CREATE TRIGGER updateTipCount
-AFTER INSERT ON User
+AFTER INSERT ON TipTable
 FOR EACH ROW
-WHEN (old.user_id = new.user_id)
-EXECUTE PROCEDURE updateTipCount();
+WHEN (NEW.user_id is not NULL AND NEW.businessID is not NULL)
+EXECUTE PROCEDURE updateNewTipCount();
+
+
+--test1 Begins
+SELECT * FROM UserTable
+WHERE UserTable.user_id = 'jRyO2V1pA4CdVVqCIOPc1Q'
+ORDER BY user_id;
+
+INSERT INTO TipTable (businessID, user_id, likes, text, date) 
+VALUES ('5KheTjYPu1HcQzQFtm4_vw','jRyO2V1pA4CdVVqCIOPc1Q','40','I love CHIPS AND SALSA!!!!!!!!!!!!!!!!!!!!!!!','2020-12-30');
+
+
+
+SELECT COUNT(*) FROM TipTable
+WHERE TipTable.user_id = 'jRyO2V1pA4CdVVqCIOPc1Q'
+
+SELECT * FROM UserTable
+WHERE UserTable.user_id = 'jRyO2V1pA4CdVVqCIOPc1Q'
+ORDER BY user_id;
+
+
+--Clean Test 1
+DELETE FROM TipTable
+WHERE TipTable.user_id = 'jRyO2V1pA4CdVVqCIOPc1Q' AND TipTable.businessID = '5KheTjYPu1HcQzQFtm4_vw' AND date = '2020-12-30';
+
+DROP TRIGGER updateTipCount on TipTable 
+
 /*TRIGGER Statement for tipCount Ends*/
 
 /*TRIGGER Statement for numCheckins Begins*/
 CREATE OR REPLACE FUNCTION updateNumCheckins() RETURNS trigger AS '
 BEGIN 
-    UPDATE Business
-    SET Business.numCheckins = checkCount.numCheckins
+    UPDATE BusinessTable
+    SET numCheckins = checkCount.totalCheckin
     FROM (
-        select Check_in.businessID, COUNT(Check_in.businessID) as numCheckins
-        FROM Check_in
-        WHERE Check_in.businessID = NEW.businessID
-        GROUP BY Check_in.businessID
+        select CheckInTable.businessID, COUNT(CheckInTable.businessID) as totalCheckin
+        FROM CheckInTable
+        WHERE CheckInTable.businessID = NEW.businessID
+        GROUP BY CheckInTable.businessID
     ) as checkCount
-    WHERE Business.businessID = checkCount.businessID
+    WHERE BusinessTable.businessID = checkCount.businessID;
    RETURN NEW;
 END
 ' LANGUAGE plpgsql; 
 
 CREATE TRIGGER updateCheckins
-AFTER INSERT ON Check_in
+AFTER INSERT ON CheckInTable
 FOR EACH ROW 
-WHEN (OLD.businessID = NEW.businessID) --Remove this line and just check that NEW is not null, if it does not work.
+WHEN (NEW.businessID is not NULL) --Remove this line and just check that NEW is not null, if it does not work.
 EXECUTE PROCEDURE updateNumCheckins();
 
 
 -- numCheckin Trigger TESTS are below--
 --Test 1
-INSERT INTO Check_in
-VALUES('20', '21:16:27', '2020', '04', '-000aQFeK6tqVLndf7xORg', '09owAly0xUSt_JlDVLuNJg');
-SELECT * FROM Check_in ORDER BY user_id
+SELECT * FROM BusinessTable
+WHERE BusinessTable.businessID = '-000aQFeK6tqVLndf7xORg'
+ORDER BY businessID;
+
+INSERT INTO CheckInTable
+VALUES('20', '22:11:28', '2020', '04', '-000aQFeK6tqVLndf7xORg');
+SELECT * FROM CheckInTable 
+WHERE CheckInTable.businessID = '-000aQFeK6tqVLndf7xORg'
+ORDER BY businessID;
+
+SELECT * FROM BusinessTable
+WHERE BusinessTable.businessID = '-000aQFeK6tqVLndf7xORg'
+ORDER BY businessID;
+
 
 --Clean Test 1
-DELETE FROM Check_in
-WHERE user_id = '09owAly0xUSt_JlDVLuNJg' AND businessID = '-000aQFeK6tqVLndf7xORg' AND
-day = '20' AND month = '04' AND time = '21:16:27' AND year = '2020'
+DELETE FROM CheckInTable
+WHERE businessID = '-000aQFeK6tqVLndf7xORg' AND
+day = '20' AND month = '04' AND time = '21:16:27' AND year = '2020';
 
-DROP TRIGGER updateCheckins on Check_in 
+DROP TRIGGER updateCheckins on CheckInTable 
 /*TRIGGER Statement for numCheckins Ends*/
 
 /*TRIGGER Statement for totalLikes Begins*/
 CREATE OR REPLACE FUNCTION updateTotalLikes() RETURNS trigger AS '
 BEGIN
-    UPDATE User
-    SET User.totalLikes = totalLikes.likes
+    UPDATE UserTable
+    SET likecount = tips.tipLikes
     FROM (
-        SELECT Tip.user_id, Tip.likes
-        FROM Tip
-        GROUP BY Tip.user_id
-    ) as totalLikes
-    WHERE User.user_id = likes.user_id
-    RETURN User
+        select TipTable.user_id, SUM(TipTable.likes) as tipLikes
+        from TipTable
+        group by TipTable.user_id
+    ) as tips
+    WHERE UserTable.user_id = tips.user_id;
+    RETURN NEW;
 END
 ' LANGUAGE plpgsql;
 
 CREATE TRIGGER updateTotalLikes
-AFTER INSERT ON User
+AFTER INSERT ON TipTable
 FOR EACH ROW
-WHEN (OLD.user_id = NEW.user_id)
+WHEN (NEW.user_id is not null) 
 EXECUTE PROCEDURE updateTotalLikes();
+
+-- totalLikes Trigger TESTS are below--
+--Test 1
+INSERT INTO TipTable
+VALUES('D2nfOrnJ2OBlX_428sKyMg','3KkT6SmPFLGvBS1pnDBr8g','100','Short lines at lunch!!','2020-11-28');
+
+SELECT * FROM UserTable 
+WHERE user_id = '3KkT6SmPFLGvBS1pnDBr8g';
+
+--Clean Test 1
+DELETE FROM TipTable
+WHERE user_id = '3KkT6SmPFLGvBS1pnDBr8g' AND businessID = 'D2nfOrnJ2OBlX_428sKyMg' AND
+date = '2020-11-28'
+
+DROP TRIGGER updateTotalLikes on TipTable
 /*TRIGGER Statement for totalLikes Ends*/
