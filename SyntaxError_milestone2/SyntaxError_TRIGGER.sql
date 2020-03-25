@@ -65,7 +65,6 @@ INSERT INTO TipTable (businessID, user_id, likes, text, date)
 VALUES ('5KheTjYPu1HcQzQFtm4_vw','jRyO2V1pA4CdVVqCIOPc1Q','40','I love CHIPS AND SALSA!!!!!!!!!!!!!!!!!!!!!!!','2020-12-30');
 
 
-
 SELECT COUNT(*) FROM TipTable
 WHERE TipTable.user_id = 'jRyO2V1pA4CdVVqCIOPc1Q'
 

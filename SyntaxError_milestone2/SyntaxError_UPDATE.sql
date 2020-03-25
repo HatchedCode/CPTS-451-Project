@@ -1,43 +1,43 @@
 /*UPDATE Statement for numCheckins Begins*/
-UPDATE Business
-SET Business.numCheckins = checkCount.numCheckins
+UPDATE BusinessTable
+SET BusinessTable.numCheckins = checkCount.numCheckins
 FROM (
-    select Check_in.businessID, COUNT(Check_in.businessID) as numCheckins
-    from Check_in
-    group by Check_in.businessID
+    select businessID, COUNT(CheckInTable.businessID) as numCheckins
+    from CheckInTable
+    group by CheckInTable.businessID
 ) as checkCount
-WHERE Business.businessID = checkCount.businessID 
+WHERE BusinessTable.businessID = checkCount.businessID;
 /*UPDATE Statement for numCheckins Ends*/
 
 /*UPDATE Statement for numTips Begins*/
-UPDATE Business
-SET Business.numTips = tipCount.numTips
+UPDATE BusinessTable
+SET numTips = tipCount.numTips
 FROM (
-    select Tip.businessID, COUNT(Tip.businessID) as numTips
-    from Tip
-    group by Tip.businessID
+    select TipTable.businessID, COUNT(TipTable.businessID) as numTips
+    from TipTable
+    group by TipTable.businessID
 ) as tipCount
-WHERE Business.businessID = tipCount.businessID 
+WHERE BusinessTable.businessID = tipCount.businessID;
 /*UPDATE Statement for numTips Ends*/
 
 /*UPDATE Statement for totalLikes Begins*/
-UPDATE User
-SET User.likecount = tips.tipLikes
+UPDATE UserTable
+SET likecount = tips.tipLikes
 FROM (
-    select Tip.user_id, SUM(Tip.likes) as tipLikes
-    from Tip
-    group by Tip.user_id
+    select TipTable.user_id, SUM(TipTable.likes) as tipLikes
+    from TipTable
+    group by TipTable.user_id
 ) as tips
-WHERE User.user_id = tips.user_id
+WHERE UserTable.user_id = tips.user_id;
 /*UPDATE Statement for totalLikes Ends*/
 
 /*UPDATE Statement for tipCount Begins*/
-UPDATE User
-SET User.tipcount = tips.tipcount
+UPDATE UserTable
+SET tipcount = tips.tipcount
 FROM (
-    select Tip.user_id, COUNT(Tip.user_id) as tipcount
-    from Tip
-    group by Tip.user_id
+    select TipTable.user_id, COUNT(TipTable.user_id) as tipcount
+    from TipTable
+    group by TipTable.user_id
 ) as tips
-WHERE User.user_id = tips.user_id
+WHERE UserTable.user_id = tips.user_id;
 /*UPDATE Statement for tipCount Ends*/
