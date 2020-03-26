@@ -29,7 +29,7 @@ namespace YelpProject
 
         private string buildConnectionString()
         {
-            return "Host = localhost; Username = postgres; Database = yelpdb; password = postgres";
+            return "Host = localhost; Username = postgres; Database = yelpdb; password = 0622";
         }
         private void executeQuery(string sqlstr, Action<NpgsqlDataReader> myfunc)
         {
@@ -142,14 +142,32 @@ namespace YelpProject
         private void categoryListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             businessGrid.Items.Clear();
-
+            string sqlstr = "SELECT distinct BusinessTable.busName, BusinessTable.businessID FROM BusinessTable, CategoryTable WHERE BusinessTable.busPostal = '" + zipList.SelectedItem.ToString() + "'";
+            //for (int i = 0; i < categoryListBox.SelectedItems.Count; i++)
+            //{
+            //    sqlstr += " AND CategoryTable.cat_name = '" + categoryListBox.SelectedItems[i].ToString() + "'";
+            //}
             for (int i = 0; i < categoryListBox.SelectedItems.Count; i++)
             {
-                string sqlstr1 = "SELECT distinct BusinessTable.busName, BusinessTable.businessID FROM BusinessTable, CategoryTable WHERE BusinessTable.busPostal = '" + zipList.SelectedItem.ToString() + "'AND " +
-                    " CategoryTable.cat_name = '" + categoryListBox.SelectedItems[i].ToString() + "'AND BusinessTable.businessID = BusinessTable.businessID ORDER BY BusinessTable.busName, BusinessTable.businessID";
-                executeQuery(sqlstr1, queryBusiness);
+                sqlstr += " AND BusinessTable.businessID IN (SELECT businessID FROM CategoryTable WHERE cat_name = '" + categoryListBox.SelectedItems[i].ToString() + "')";
             }
+
+            //sqlstr += " AND BusinessTable.businessID = CategoryTable.businessID ORDER BY BusinessTable.busName, BusinessTable.businessID";
+            executeQuery(sqlstr, queryBusiness);
         }
+
+        //private void categoryListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        //{
+        //    businessGrid.Items.Clear();
+
+        //    for (int i = 0; i < categoryListBox.SelectedItems.Count; i++)
+        //    {
+        //        string sqlstr1 = "SELECT distinct BusinessTable.busName, BusinessTable.businessID FROM BusinessTable, CategoryTable WHERE BusinessTable.busPostal = '" + zipList.SelectedItem.ToString() + "' AND " +
+        //            "CategoryTable.cat_name = '" + categoryListBox.SelectedItems[i].ToString() + "' AND BusinessTable.businessID = BusinessTable.businessID ORDER BY BusinessTable.busName, BusinessTable.businessID";
+        //        executeQuery(sqlstr1, queryBusiness);
+        //    }
+        //}
+
         private void queryTips(NpgsqlDataReader R)
         {
             tipListBox.Items.Add(R.GetString(0));
