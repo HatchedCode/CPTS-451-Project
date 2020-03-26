@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:YelpProject"
         mc:Ignorable="d"
-        Title="Yelp App" Height="693.257" Width="1281.655" ResizeMode="NoResize">
-    <Grid>
+        Title="Yelp App" Height="809.257" Width="2007.655" >
+    <Grid Height="799" VerticalAlignment="Top" HorizontalAlignment="Left" Width="1998" Margin="0,0,0,-19">
         <Label x:Name="stateLabel" Content="State" HorizontalAlignment="Left" FontSize = "14" Margin="34,14,0,0" VerticalAlignment="Top" RenderTransformOrigin="-4.696,0.615"/>
         <ComboBox x:Name="stateList" HorizontalAlignment="Left" Margin="92,18,0,0" VerticalAlignment="Top" Width="100" SelectionChanged="stateList_SelectionChanged"/>
         <Label x:Name="cityLabel" Content="City" HorizontalAlignment="Left" FontSize = "14" Margin="34,56,0,0" VerticalAlignment="Top" RenderTransformOrigin="-4.696,0.615"/>
@@ -21,7 +21,9 @@
         <Label x:Name="tipLabel" Content="Tips:" HorizontalAlignment="Left" FontSize = "14" Margin="702,15,0,0" VerticalAlignment="Top"/>
         <Label x:Name="leaveTipLabel" Content="Leave A Tip?" HorizontalAlignment="Left" FontSize = "14" Margin="702,279,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="leaveTipTextBox" HorizontalAlignment="Left" Height="72" Margin="702,305,0,0" TextWrapping="Wrap"  FontSize = "14" Text="Enter Tip Here..." VerticalAlignment="Top" Width="280"/>
-        <Button x:Name="submitButton" Content="Submit" HorizontalAlignment="Left" Margin="907,382,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button x:Name="submitButton" Content="Submit" HorizontalAlignment="Left" Margin="907,382,0,0" VerticalAlignment="Top" Width="75" Click="submitButton_Click"/>
+        <Label x:Name="usersLabel" Content="Users:" HorizontalAlignment="Left" Margin="1158,14,0,0" VerticalAlignment="Top" Height="29" Width="112"/>
+        <DataGrid x:Name="usersGrid" HorizontalAlignment="Left" Height="391" Margin="1158,43,0,0" VerticalAlignment="Top" Width="333" SelectionChanged="usersDataGrid_SelectionChanged"/>
 
     </Grid>
 </Window>

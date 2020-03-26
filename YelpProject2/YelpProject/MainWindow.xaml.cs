@@ -20,16 +20,24 @@ namespace YelpProject
             public string zipcode { get; set; }
             public string bid { get; set; }
         }
+
+        public class User
+        {
+            public string name { get; set; }
+            public string id { get; set; }
+        }
+
         public MainWindow()
         {
             InitializeComponent();
             addColumns2BusinessGrid();
+            addColumns2UserGrid();
             addStates();
         }
 
         private string buildConnectionString()
         {
-            return "Host = localhost; Username = postgres; Database = yelpdb; password = 0622";
+            return "Host = localhost; Username = postgres; Database = yelpdb; password = postgres";
         }
         private void executeQuery(string sqlstr, Action<NpgsqlDataReader> myfunc)
         {
@@ -68,6 +76,12 @@ namespace YelpProject
         {
             string sqlstr = "SELECT distinct busState FROM BusinessTable ORDER BY busState";
             executeQuery(sqlstr, queryStates);
+        }
+
+        private void addUsers()
+        {
+            string sqlstr = "SELECT distinct user_id, name FROM UserTable ORDER BY user_id";
+            executeQuery(sqlstr, queryUser);
         }
 
         private void queryCity(NpgsqlDataReader R)
@@ -117,9 +131,37 @@ namespace YelpProject
             businessGrid.CanUserResizeRows = false;
         }
 
+        private void addColumns2UserGrid()
+        {
+            DataGridTextColumn col1 = new DataGridTextColumn(); // name
+            DataGridTextColumn col2 = new DataGridTextColumn(); // id
+
+            col1.Binding = new Binding("name");
+            col1.Header = "User Name";
+            col1.Width = 330/2;
+            usersGrid.Columns.Add(col1);
+
+            col2.Binding = new Binding("id");
+            col2.Header = "User Id";
+            col2.Width = 330/2;
+            usersGrid.Columns.Add(col2);
+
+
+            usersGrid.CanUserResizeColumns = false;
+            usersGrid.CanUserResizeRows = false;
+
+            usersGrid.SelectionMode = DataGridSelectionMode.Single;
+        }
+
+
         private void queryBusiness(NpgsqlDataReader R)
         {
-            businessGrid.Items.Add(new Business() { name = R.GetString(0) });
+            businessGrid.Items.Add(new Business() { name = R.GetString(0), bid = R.GetString(1) });
+        }
+
+        private void queryUser(NpgsqlDataReader R)
+        {
+            usersGrid.Items.Add(new User() { id = R.GetString(0), name = R.GetString(1) });
         }
 
         private void zipList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -182,7 +224,27 @@ namespace YelpProject
                 string sqlstr = "SELECT distinct text, date FROM (" +
                     sqlstr1 + ") as bus FULL OUTER JOIN TipTable ON TipTable.businessID = bus.businessID ORDER BY date";
                 executeQuery(sqlstr, queryTips);
+                addUsers();
             }
+        }
+
+        private void submitButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (businessGrid.Items.IndexOf(businessGrid.SelectedItem) > -1 && leaveTipTextBox.Text.Length > 0 && usersGrid.Items.IndexOf(usersGrid.SelectedItem) > -1)
+            {
+                string sqlstr = "INSERT INTO TipTable(businessID, user_id, likes, text, date) VALUES('" + (businessGrid.SelectedItem as Business).bid + "', '" +
+                 (usersGrid.SelectedItem as User).id + "', " + "0" + ", '" + leaveTipTextBox.Text + "', '" + DateTime.Today.ToString("yyyy-MM-dd") + "')";
+                executeQuery(sqlstr, queryTips);
+            }
+            else
+            {
+                MessageBox.Show("Something has gone wrong, FIX IT", "Error adding a tip.", MessageBoxButton.OK);
+            }
+        }
+
+        private void usersDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //Future works
         }
     }
 }
