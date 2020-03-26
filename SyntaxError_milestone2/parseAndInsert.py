@@ -381,7 +381,7 @@ def insert2TipTable():
         while line:
             data = json.loads(line)
             
-            (date,time) = cleanStr4SQL(data['date']).split(' ') #Split the day and the time
+            day = cleanStr4SQL(data['date'])
             # (year,month,day) = day.split('-') #Split the day into the year, month, and day.
 
             # Generate the INSERT statement for the cussent business
@@ -389,7 +389,7 @@ def insert2TipTable():
             # include values for all businessTable attributes
             sql_str_tipTable = "INSERT INTO TipTable (businessID, user_id, likes, text, date) " \
                                  "VALUES ('" + data['business_id'] + "','" + cleanStr4SQL(data["user_id"])  + "','" + \
-                                    str(data["likes"]) + "','" + cleanStr4SQL(data["text"])+ "','" + str(date) +  "'" + ");"
+                                    str(data["likes"]) + "','" + cleanStr4SQL(data["text"])+ "','" + str(day) +  "'" + ");"
             try:
                 cur.execute(sql_str_tipTable)
             except Exception as e:
