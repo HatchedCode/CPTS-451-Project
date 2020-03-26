@@ -141,20 +141,14 @@ namespace YelpProject
 
         private void categoryListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-/*            businessGrid.Items.Clear();
-            string sqlstr1 = "SELECT busName, businessID FROM BusinessTable WHERE busPostal = '" + 85086.ToString() + "' ORDER BY busPostal";
-            string sqlstr = "SELECT distinct bus.busName, bus.businessID FROM (" +
-                sqlstr1 + ") as bus FULL OUTER JOIN CategoryTable ON CategoryTable.businessID = bus.businessID AND CategoryTable.cat_name = '" + "Acne Treatment" + "' ORDER BY bus.busName, bus.businessID";
-            executeQuery(sqlstr, queryBusiness);*/
-            /*            for (int i = 0; i < categoryListBox.SelectedItems.Count; i++)
-                        {
-                            MessageBox.Show("categoryListBox_SelectionChanged(): ", zipList.SelectedItem.ToString(), MessageBoxButton.OK);
-                            string sqlstr1 = "SELECT busName, businessID FROM BusinessTable WHERE busPostal = '" + zipList.SelectedItem.ToString() + "' ORDER BY busPostal";
-                            string sqlstr = "SELECT distinct bus.busName, bus.businessID FROM (" +
-                                sqlstr1 + ") as bus FULL OUTER JOIN CategoryTable ON CategoryTable.businessID = bus.businessID AND CategoryTable.cat_name = '" + categoryListBox.SelectedItems[i].ToString() + "' ORDER BY bus.busName, bus.businessID";
-                            executeQuery(sqlstr, queryBusiness);
-                            MessageBox.Show("categoryListBox_SelectionChanged(): ", categoryListBox.Items.Count.ToString(), MessageBoxButton.OK);
-                        }*/
+            businessGrid.Items.Clear();
+
+            for (int i = 0; i < categoryListBox.SelectedItems.Count; i++)
+            {
+                string sqlstr1 = "SELECT distinct BusinessTable.busName, BusinessTable.businessID FROM BusinessTable, CategoryTable WHERE BusinessTable.busPostal = '" + zipList.SelectedItem.ToString() + "'AND " +
+                    " CategoryTable.cat_name = '" + categoryListBox.SelectedItems[i].ToString() + "'AND BusinessTable.businessID = BusinessTable.businessID ORDER BY BusinessTable.busName, BusinessTable.businessID";
+                executeQuery(sqlstr1, queryBusiness);
+            }
         }
         private void queryTips(NpgsqlDataReader R)
         {
