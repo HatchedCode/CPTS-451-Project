@@ -66,7 +66,7 @@ CREATE TABLE TipTable(
     user_id VARCHAR(50),
     likes INTEGER,
     text VARCHAR,
-    date DATE,
+    date timestamp,
     PRIMARY KEY(businessID, date, user_id),
     FOREIGN KEY(businessID) REFERENCES BusinessTable(businessID),
     FOREIGN KEY(user_id) REFERENCES UserTable(user_id)

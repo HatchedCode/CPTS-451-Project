@@ -18,20 +18,20 @@ AFTER INSERT ON TipTable
 FOR EACH ROW
 WHEN (new.businessID is not null)
 EXECUTE PROCEDURE updateNumTips();
-/TRIGGER Statement for numTips Ends/
+/*TRIGGER Statement for numTips Ends*/
 
 --Test 1
 INSERT INTO TipTable (businessID, user_id, likes, text, date) 
-VALUES ('5KheTjYPu1HcQzQFtm4_vw','jRyO2V1pA4CdVVqCIOPc1Q','32','Testing 1 2 3','2020-12-26');
+VALUES ('5KheTjYPu1HcQzQFtm4_vw','jRyO2V1pA4CdVVqCIOPc1Q','32','Testing 1 2 3','2020-12-26 21:32:49');
 
 SELECT * FROM BusinessTable 
 WHERE businessID = '5KheTjYPu1HcQzQFtm4_vw';
 
 --Clean Test 1
 DELETE FROM TipTable
-WHERE businessID = '5KheTjYPu1HcQzQFtm4_vw' AND user_id = 'jRyO2V1pA4CdVVqCIOPc1Q' AND date = '2020-12-26';
+WHERE businessID = '5KheTjYPu1HcQzQFtm4_vw' AND user_id = 'jRyO2V1pA4CdVVqCIOPc1Q' AND date = '2020-12-26 21:32:49';
 
-DROP TRIGGER updateNumTips on TipTable
+-- DROP TRIGGER updateNumTips on TipTable
 /*TRIGGER Statement for numTips Ends*/
 
 /*TRIGGER Statement for tipCount Begins*/
@@ -62,11 +62,11 @@ WHERE UserTable.user_id = 'jRyO2V1pA4CdVVqCIOPc1Q'
 ORDER BY user_id;
 
 INSERT INTO TipTable (businessID, user_id, likes, text, date) 
-VALUES ('5KheTjYPu1HcQzQFtm4_vw','jRyO2V1pA4CdVVqCIOPc1Q','40','I love CHIPS AND SALSA!!!!!!!!!!!!!!!!!!!!!!!','2020-12-30');
+VALUES ('5KheTjYPu1HcQzQFtm4_vw','jRyO2V1pA4CdVVqCIOPc1Q','40','I love CHIPS AND SALSA!!!!!!!!!!!!!!!!!!!!!!!','2020-12-30 21:32:49');
 
 
 SELECT COUNT(*) FROM TipTable
-WHERE TipTable.user_id = 'jRyO2V1pA4CdVVqCIOPc1Q'
+WHERE TipTable.user_id = 'jRyO2V1pA4CdVVqCIOPc1Q';
 
 SELECT * FROM UserTable
 WHERE UserTable.user_id = 'jRyO2V1pA4CdVVqCIOPc1Q'
@@ -75,9 +75,9 @@ ORDER BY user_id;
 
 --Clean Test 1
 DELETE FROM TipTable
-WHERE TipTable.user_id = 'jRyO2V1pA4CdVVqCIOPc1Q' AND TipTable.businessID = '5KheTjYPu1HcQzQFtm4_vw' AND date = '2020-12-30';
+WHERE TipTable.user_id = 'jRyO2V1pA4CdVVqCIOPc1Q' AND TipTable.businessID = '5KheTjYPu1HcQzQFtm4_vw' AND date = '2020-12-30 21:32:49';
 
-DROP TRIGGER updateTipCount on TipTable 
+-- DROP TRIGGER updateTipCount on TipTable
 
 /*TRIGGER Statement for tipCount Ends*/
 
@@ -124,9 +124,9 @@ ORDER BY businessID;
 --Clean Test 1
 DELETE FROM CheckInTable
 WHERE businessID = '-000aQFeK6tqVLndf7xORg' AND
-day = '20' AND month = '04' AND time = '21:16:27' AND year = '2020';
+day = '20' AND month = '04' AND time = '22:11:28' AND year = '2020';
 
-DROP TRIGGER updateCheckins on CheckInTable 
+-- DROP TRIGGER updateCheckins on CheckInTable
 /*TRIGGER Statement for numCheckins Ends*/
 
 /*TRIGGER Statement for totalLikes Begins*/
@@ -153,7 +153,7 @@ EXECUTE PROCEDURE updateTotalLikes();
 -- totalLikes Trigger TESTS are below--
 --Test 1
 INSERT INTO TipTable
-VALUES('D2nfOrnJ2OBlX_428sKyMg','3KkT6SmPFLGvBS1pnDBr8g','100','Short lines at lunch!!','2020-11-28');
+VALUES('D2nfOrnJ2OBlX_428sKyMg','3KkT6SmPFLGvBS1pnDBr8g','100','Short lines at lunch!!','2020-11-28 21:32:49');
 
 SELECT * FROM UserTable 
 WHERE user_id = '3KkT6SmPFLGvBS1pnDBr8g';
@@ -161,7 +161,7 @@ WHERE user_id = '3KkT6SmPFLGvBS1pnDBr8g';
 --Clean Test 1
 DELETE FROM TipTable
 WHERE user_id = '3KkT6SmPFLGvBS1pnDBr8g' AND businessID = 'D2nfOrnJ2OBlX_428sKyMg' AND
-date = '2020-11-28'
+date = '2020-11-28 21:32:49';
 
-DROP TRIGGER updateTotalLikes on TipTable
+-- DROP TRIGGER updateTotalLikes on TipTable
 /*TRIGGER Statement for totalLikes Ends*/
