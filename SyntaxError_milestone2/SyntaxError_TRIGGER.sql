@@ -66,7 +66,7 @@ VALUES ('5KheTjYPu1HcQzQFtm4_vw','jRyO2V1pA4CdVVqCIOPc1Q','40','I love CHIPS AND
 
 
 SELECT COUNT(*) FROM TipTable
-WHERE TipTable.user_id = 'jRyO2V1pA4CdVVqCIOPc1Q'
+WHERE TipTable.user_id = 'jRyO2V1pA4CdVVqCIOPc1Q';
 
 SELECT * FROM UserTable
 WHERE UserTable.user_id = 'jRyO2V1pA4CdVVqCIOPc1Q'
@@ -124,7 +124,7 @@ ORDER BY businessID;
 --Clean Test 1
 DELETE FROM CheckInTable
 WHERE businessID = '-000aQFeK6tqVLndf7xORg' AND
-day = '20' AND month = '04' AND time = '21:16:27' AND year = '2020';
+day = '20' AND month = '04' AND time = '22:11:28' AND year = '2020';
 
 -- DROP TRIGGER updateCheckins on CheckInTable
 /*TRIGGER Statement for numCheckins Ends*/
@@ -161,7 +161,7 @@ WHERE user_id = '3KkT6SmPFLGvBS1pnDBr8g';
 --Clean Test 1
 DELETE FROM TipTable
 WHERE user_id = '3KkT6SmPFLGvBS1pnDBr8g' AND businessID = 'D2nfOrnJ2OBlX_428sKyMg' AND
-date = '2020-11-28 21:32:49'
+date = '2020-11-28 21:32:49';
 
 -- DROP TRIGGER updateTotalLikes on TipTable
 /*TRIGGER Statement for totalLikes Ends*/

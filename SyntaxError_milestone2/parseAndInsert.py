@@ -22,11 +22,11 @@ def attParser(mydict):
     return mylist
 
 #hours are inside a dictionary and the hours are seperated by '-'
-def hourParser(mydict, file):
+def hourParser(mydict):
     for key, item in mydict.items(): #Access the first dictionary; get key and item
         str(item) #typecast the item into a string
         mylist.append(tuple((str(key), item.split('-')))) #make into a tuple and append to list    
-
+    return mylist
 
 def insert2BusinessTable():
     #reading the JSON file
@@ -146,8 +146,7 @@ def insert2AttritutesTable():
             # include values for all Category attributes
             businessID = str(data['business_id'])
             mylist = []
-            attParser(data['attributes'])
-
+            mylist = attParser(data['attributes'])
             for (att_name, value) in mylist:
                 sql_str_attritutesTable = "INSERT INTO AttributesTable (att_name, value, businessID) " \
                         "VALUES ('" + att_name + "','" + value  + "','" + businessID +  "'" + ");"
@@ -192,13 +191,14 @@ def insert2HoursTable():
             # include values for all Category attributes
             businessID = data['business_id']
             mylist = []
-            hourParser(data['hours'], outfile)
+            mydict = data['hours']
 
-            for (h_day, value) in mylist:
-                t_start = value[0] #Given the structure that there is only an open and an end in the list (Nothing more).
-                t_end = value[1]
+            for (h_day, value) in mydict.items():
+                str(value)
+                t_start, t_end = value.split('-') #Given the structure that there is only an open and an end in the list (Nothing more).
+
                 sql_str_attritutesTable = "INSERT INTO HoursTable (t_start, t_end, h_day, businessID) " \
-                        "VALUES ('" + t_start + "','" + t_end + "','" + h_day  + "','" + businessID +  "'" + ");"
+                        "VALUES ('" + t_start + "','" + t_end + "','" + str(h_day)  + "','" + businessID +  "'" + ");"
                 try:
                     cur.execute(sql_str_attritutesTable)
                 except Exception as e:
@@ -412,11 +412,11 @@ def insert2TipTable():
     f.close()
     
 
-insert2BusinessTable()
-insert2UserTable()
-insert2CheckinTable()
-insert2TipTable()
-insert2FriendTable()
-insert2HoursTable()
+# insert2BusinessTable()
+# insert2UserTable()
+# insert2CheckinTable()
+# insert2TipTable()
+# insert2FriendTable()
+# insert2HoursTable()
 insert2AttritutesTable()
-insert2CategoryTable()
+# insert2CategoryTable()

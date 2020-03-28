@@ -1,6 +1,6 @@
 /*UPDATE Statement for numCheckins Begins*/
 UPDATE BusinessTable
-SET BusinessTable.numCheckins = checkCount.numCheckins
+SET numCheckins = checkCount.numCheckins
 FROM (
     select businessID, COUNT(CheckInTable.businessID) as numCheckins
     from CheckInTable
@@ -33,9 +33,9 @@ WHERE UserTable.user_id = tips.user_id;
 
 /*UPDATE Statement for tipCount Begins*/
 UPDATE UserTable
-SET tipcount = tips.tipcount
+SET tipcount = tips.tiptotal
 FROM (
-    select TipTable.user_id, COUNT(TipTable.user_id) as tipcount
+    select TipTable.user_id, COUNT(TipTable.user_id) as tiptotal
     from TipTable
     group by TipTable.user_id
 ) as tips
