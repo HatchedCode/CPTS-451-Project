@@ -184,7 +184,7 @@ namespace YelpProject
         private void categoryListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             businessGrid.Items.Clear();
-            string sqlstr = "SELECT distinct BusinessTable.busName FROM BusinessTable, CategoryTable WHERE BusinessTable.busPostal = '" + zipList.SelectedItem.ToString() + "'";
+            string sqlstr = "SELECT distinct BusinessTable.busName, BusinessTable.businessID FROM BusinessTable, CategoryTable WHERE BusinessTable.busPostal = '" + zipList.SelectedItem.ToString() + "'";
             for (int i = 0; i < categoryListBox.SelectedItems.Count; i++)
             {
                 sqlstr += " AND BusinessTable.businessID IN (SELECT businessID FROM CategoryTable WHERE cat_name = '" + categoryListBox.SelectedItems[i].ToString() + "')";
