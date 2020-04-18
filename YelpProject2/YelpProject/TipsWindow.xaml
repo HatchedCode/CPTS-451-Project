@@ -1,0 +1,28 @@
+﻿<Window x:Class="YelpProject.TipsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:YelpProject"
+        mc:Ignorable="d"
+        Title="YelpApp" Height="982.958" Width="1854.754" ResizeMode="NoResize">
+    <Grid>
+        <GroupBox x:Name="newTipGroupBox" Header="New Tip" HorizontalAlignment="Left" Height="146" Margin="35,10,0,0" VerticalAlignment="Top" Width="1559">
+            <Grid HorizontalAlignment="Left" Height="119" Margin="4,0,0,0" VerticalAlignment="Top" Width="1539">
+                <TextBox x:Name="newTipTextBox" HorizontalAlignment="Left" Height="99" Margin="0,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="1529"/>
+            </Grid>
+        </GroupBox>
+        <Button x:Name="addNewTipbutton" Content="Add Tip" HorizontalAlignment="Left" Height="98" Margin="1661,34,0,0" VerticalAlignment="Top" Width="142"/>
+        <GroupBox x:Name="busTipsGroupBox" Header="Business Tips" HorizontalAlignment="Left" Height="444" Margin="35,178,0,0" VerticalAlignment="Top" Width="1559">
+            <Grid HorizontalAlignment="Left" Height="399" Margin="10,10,0,0" VerticalAlignment="Top" Width="1533">
+                <DataGrid x:Name="busTipsDataGrid" HorizontalAlignment="Left" Height="389" VerticalAlignment="Top" Width="1523"/>
+            </Grid>
+        </GroupBox>
+        <GroupBox x:Name="friendTipsGroupBox" Header="Friends who reviewed this business" HorizontalAlignment="Left" Height="304" Margin="34,640,0,0" VerticalAlignment="Top" Width="1560">
+            <Grid HorizontalAlignment="Left" Height="267" Margin="10,10,0,0" VerticalAlignment="Top" Width="1534">
+                <DataGrid x:Name="friendTipsDataGrid" HorizontalAlignment="Left" Height="267" VerticalAlignment="Top" Width="1534"/>
+            </Grid>
+        </GroupBox>
+
+    </Grid>
+</Window>

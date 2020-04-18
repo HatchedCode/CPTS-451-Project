@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YelpProject", "YelpProject\YelpProject.csproj", "{0C3130E7-3643-4E11-BD6D-0B9547D2702F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YelpEngine", "YelpEngine\YelpEngine.csproj", "{4CED7792-ACC5-4C28-921C-BCD08DAF674B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{0C3130E7-3643-4E11-BD6D-0B9547D2702F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C3130E7-3643-4E11-BD6D-0B9547D2702F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C3130E7-3643-4E11-BD6D-0B9547D2702F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CED7792-ACC5-4C28-921C-BCD08DAF674B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CED7792-ACC5-4C28-921C-BCD08DAF674B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CED7792-ACC5-4C28-921C-BCD08DAF674B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CED7792-ACC5-4C28-921C-BCD08DAF674B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
