@@ -371,17 +371,17 @@ namespace YelpProject
             {
                 id = R.GetString(0),
                 name = R.GetString(1),
-                funny = int.Parse(R.GetString(0)),
-                yelping_since = R.GetString(1),
-                useful = int.Parse(R.GetString(0)),
-                fans = int.Parse(R.GetString(0)),
-                cool = int.Parse(R.GetString(0)),
-                avg_stars = float.Parse(R.GetString(0)),
-                tipcount = int.Parse(R.GetString(0)),
-                postcount = int.Parse(R.GetString(0)),
-                likecount = int.Parse(R.GetString(0)),
-                longitude = float.Parse(R.GetString(0)),
-                latitude = float.Parse(R.GetString(0))
+                funny = int.Parse(R.GetString(2)),
+                yelping_since = R.GetString(3),
+                useful = int.Parse(R.GetString(4)),
+                fans = int.Parse(R.GetString(5)),
+                cool = int.Parse(R.GetString(6)),
+                avg_stars = float.Parse(R.GetString(7)),
+                tipcount = int.Parse(R.GetString(8)),
+                postcount = int.Parse(R.GetString(9)),
+                likecount = int.Parse(R.GetString(10)),
+                longitude = float.Parse(R.GetString(11)),
+                latitude = float.Parse(R.GetString(12))
             };
 
             friendDataGrid.Items.Add(newFriend);
