@@ -8,17 +8,17 @@ namespace YelpEngine
     {
         public string name { get; set; }
         public string id { get; set; }
-        public int funny { get; set; }
+        public string funny { get; set; }
         public string yelping_since { get; set; }
-        public int useful { get; set; }
-        public int fans { get; set; }
-        public int cool { get; set; }
-        public float avg_stars { get; set; }
-        public int tipcount { get; set; }
-        public int postcount { get; set; }
-        public int likecount { get; set; }
-        public float longitude { get; set; }
-        public float latitude { get; set; }
+        public string useful { get; set; }
+        public string fans { get; set; }
+        public string cool { get; set; }
+        public string avg_stars { get; set; }
+        public string tipcount { get; set; }
+        public string postcount { get; set; }
+        public string likecount { get; set; }
+        public string longitude { get; set; }
+        public string latitude { get; set; }
 
     }
 }

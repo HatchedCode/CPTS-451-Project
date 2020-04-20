@@ -14,6 +14,6 @@ namespace YelpEngine
         public string user_id { get; set; }
         public string likes { get; set; }
         public string text { get; set; }
-        public DateTime date { get; set; }
+        public string date { get; set; }
     }
 }

@@ -54,7 +54,7 @@ namespace YelpProject
 
         private void addUsers()
         {
-            string sqlstr = "SELECT distinct user_id, name FROM UserTable ORDER BY user_id";
+            string sqlstr = "SELECT * FROM UserTable ORDER BY user_id";
             executeQuery(sqlstr, queryUser);
         }
 
@@ -371,17 +371,17 @@ namespace YelpProject
             {
                 id = R.GetString(0),
                 name = R.GetString(1),
-                funny = int.Parse(R.GetString(2)),
+                funny = R.GetString(2),
                 yelping_since = R.GetString(3),
-                useful = int.Parse(R.GetString(4)),
-                fans = int.Parse(R.GetString(5)),
-                cool = int.Parse(R.GetString(6)),
-                avg_stars = float.Parse(R.GetString(7)),
-                tipcount = int.Parse(R.GetString(8)),
-                postcount = int.Parse(R.GetString(9)),
-                likecount = int.Parse(R.GetString(10)),
-                longitude = float.Parse(R.GetString(11)),
-                latitude = float.Parse(R.GetString(12))
+                useful = R.GetString(4),
+                fans = R.GetString(5),
+                cool = R.GetString(6),
+                avg_stars = R.GetString(7),
+                tipcount = R.GetString(8),
+                postcount = R.GetString(9),
+                likecount = R.GetString(10),
+                longitude = R.GetString(11),
+                latitude = R.GetString(12)
             };
 
             friendDataGrid.Items.Add(newFriend);
@@ -397,7 +397,7 @@ namespace YelpProject
                 bus_name = R.GetString(1),
                 bus_city = R.GetString(2),
                 text=R.GetString(3),
-                date=DateTime.Parse(R.GetString(4))
+                date=R.GetString(4)
             };
 
             latestFriendTipsDataGrid.Items.Add(newTipFriend);
@@ -622,25 +622,34 @@ namespace YelpProject
         {
             //get the text that the user entered
             string userName = setUsertextBox.Text;
-            
-            switch(checkString(userName))
+            clearUserInformation();
+
+            setUserDataGrid.Items.Clear();
+            friendDataGrid.Items.Clear();
+            latestFriendTipsDataGrid.Items.Clear();
+
+            switch (checkString(userName))
             {
                 case 0:
                     //There is nothing so we won't do anything
-                    clearUserInformation();
+                    //clearUserInformation();
 
                     //Now clear the userResultDataGrid
-                    setUserDataGrid.Items.Clear();
-                    friendDataGrid.Items.Clear();
-                    latestFriendTipsDataGrid.Items.Clear();
+                    addUsers();
                     break;
                 case 1:
                     //We are querying the User Table looking for all Users whose ID start with the given value
+                    //setUserDataGrid.Items.Clear();
+                    //friendDataGrid.Items.Clear();
+                    //latestFriendTipsDataGrid.Items.Clear();
                     this.findUsersByID(userName);
 
                     break;
                 case 2:
                     //We are querying the User Table looking for all Users whose Name contains with the given value
+                    //setUserDataGrid.Items.Clear();
+                    //friendDataGrid.Items.Clear();
+                    //latestFriendTipsDataGrid.Items.Clear();
                     this.findUsersByName(userName);
                     break;
             }
@@ -678,19 +687,19 @@ namespace YelpProject
         {
             User newUser = new User()
             {
-                id = R.GetString(0),
-                name = R.GetString(1),
-                funny = int.Parse(R.GetString(2)),
-                yelping_since = R.GetString(3),
-                useful = int.Parse(R.GetString(4)),
-                fans = int.Parse(R.GetString(5)),
-                cool = int.Parse(R.GetString(6)),
-                avg_stars = float.Parse(R.GetString(7)),
-                tipcount = int.Parse(R.GetString(8)),
-                postcount = int.Parse(R.GetString(9)),
-                likecount = int.Parse(R.GetString(10)),
-                longitude = float.Parse(R.GetString(11)),
-                latitude = float.Parse(R.GetString(12))
+                id = R.GetValue(0).ToString(),
+                name = R.GetValue(1).ToString(),
+                funny = R.GetValue(2).ToString(),
+                yelping_since = R.GetValue(3).ToString(),
+                useful = R.GetValue(4).ToString(),
+                fans = R.GetValue(5).ToString(),
+                cool = R.GetValue(6).ToString(),
+                avg_stars = R.GetValue(7).ToString(),
+                tipcount = R.GetValue(8).ToString(),
+                postcount = R.GetValue(9).ToString(),
+                likecount = R.GetValue(10).ToString(),
+                longitude = R.GetValue(11).ToString(),
+                latitude = R.GetValue(12).ToString()
             };
 
             setUserDataGrid.Items.Add(newUser);

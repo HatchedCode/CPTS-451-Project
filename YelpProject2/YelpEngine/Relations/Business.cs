@@ -9,14 +9,14 @@ namespace YelpEngine
         public string city { get; set; }
         public string zipcode { get; set; }
         public string bid { get; set; }
-        public int stars { get; set; }
-        public int rev_count { get; set; }
-        public float longitude { get; set; }
+        public string stars { get; set; }
+        public string rev_count { get; set; }
+        public string longitude { get; set; }
         public string address { get; set; }
-        public float latitude { get; set; }
-        public int isOpen { get; set; }
-        public int numCheckins { get; set; }
-        public int numTips { get; set; }
-        public float distance { get; set; }
+        public string latitude { get; set; }
+        public string isOpen { get; set; }
+        public string numCheckins { get; set; }
+        public string numTips { get; set; }
+        public string distance { get; set; }
     } 
 }
