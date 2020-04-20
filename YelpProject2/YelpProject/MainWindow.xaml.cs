@@ -711,7 +711,7 @@ namespace YelpProject
         //This method gets the the users whose names contain the value
         private void findUsersByName(string name)
         {
-            string sqlstr = "SELECT * FROM UserTable WHERE user_id ILIKE '%" + name + "%' ORDER BY user_id";
+            string sqlstr = "SELECT * FROM UserTable WHERE name ILIKE '%" + name + "%' ORDER BY name";
             executeQuery(sqlstr, queryUser);
         }
 
@@ -800,6 +800,10 @@ namespace YelpProject
                 //Query User Information
                 User curUser = (setUserDataGrid.SelectedItem as User);
 
+                setBasicUserInfo(curUser.name, curUser.yelping_since);
+                setUserStars(curUser.avg_stars, curUser.fans);
+                setUserVotes(curUser.funny, curUser.cool, curUser.useful);
+                setUserTips(curUser.tipcount, curUser.likecount);
 
                 //Query Friends
 
