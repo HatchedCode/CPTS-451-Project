@@ -39,6 +39,7 @@ namespace YelpProject
             addColumns2UserFriendsTipsGrid();
             addStates();
             addUsers();
+            disableCurrentUserInfo();
         }
 
         private void queryStates(NpgsqlDataReader R)
@@ -60,7 +61,7 @@ namespace YelpProject
 
         private void queryCity(NpgsqlDataReader R)
         {
-            cityListBox.Items.Add(R.GetString(0));
+            cityListBox.Items.Add(R.GetValue(0).ToString());
         }
 
         //private void stateList_SelectionChanged(object sender, SelectionChangedEventArgs e)
