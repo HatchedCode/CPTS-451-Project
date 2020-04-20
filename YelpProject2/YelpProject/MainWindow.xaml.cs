@@ -620,38 +620,41 @@ namespace YelpProject
         //User entering in new current user (via name)
         private void setUsertextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            //get the text that the user entered
-            string userName = setUsertextBox.Text;
-            clearUserInformation();
-
-            setUserDataGrid.Items.Clear();
-            friendDataGrid.Items.Clear();
-            latestFriendTipsDataGrid.Items.Clear();
-
-            switch (checkString(userName))
+            if(curnametextBox != null)
             {
-                case 0:
-                    //There is nothing so we won't do anything
-                    //clearUserInformation();
+                //get the text that the user entered
+                string userName = setUsertextBox.Text;
+                clearUserInformation();
 
-                    //Now clear the userResultDataGrid
-                    addUsers();
-                    break;
-                case 1:
-                    //We are querying the User Table looking for all Users whose ID start with the given value
-                    //setUserDataGrid.Items.Clear();
-                    //friendDataGrid.Items.Clear();
-                    //latestFriendTipsDataGrid.Items.Clear();
-                    this.findUsersByID(userName);
+                setUserDataGrid.Items.Clear();
+                friendDataGrid.Items.Clear();
+                latestFriendTipsDataGrid.Items.Clear();
 
-                    break;
-                case 2:
-                    //We are querying the User Table looking for all Users whose Name contains with the given value
-                    //setUserDataGrid.Items.Clear();
-                    //friendDataGrid.Items.Clear();
-                    //latestFriendTipsDataGrid.Items.Clear();
-                    this.findUsersByName(userName);
-                    break;
+                switch (checkString(userName))
+                {
+                    case 0:
+                        //There is nothing so we won't do anything
+                        //clearUserInformation();
+
+                        //Now clear the userResultDataGrid
+                        addUsers();
+                        break;
+                    case 1:
+                        //We are querying the User Table looking for all Users whose ID start with the given value
+                        //setUserDataGrid.Items.Clear();
+                        //friendDataGrid.Items.Clear();
+                        //latestFriendTipsDataGrid.Items.Clear();
+                        this.findUsersByID(userName);
+
+                        break;
+                    case 2:
+                        //We are querying the User Table looking for all Users whose Name contains with the given value
+                        //setUserDataGrid.Items.Clear();
+                        //friendDataGrid.Items.Clear();
+                        //latestFriendTipsDataGrid.Items.Clear();
+                        this.findUsersByName(userName);
+                        break;
+                }
             }
         }
 
