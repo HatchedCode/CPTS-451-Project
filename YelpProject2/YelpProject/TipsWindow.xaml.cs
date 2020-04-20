@@ -17,11 +17,21 @@ namespace YelpProject
     /// <summary>
     /// Interaction logic for Window1.xaml
     /// </summary>
-    public partial class Window1 : Window
+    public partial class TipsWindow : Window
     {
-        public Window1()
+        public TipsWindow()
         {
             InitializeComponent();
+        }
+
+        private void addNewTipbutton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void newTipTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
         }
     }
 }

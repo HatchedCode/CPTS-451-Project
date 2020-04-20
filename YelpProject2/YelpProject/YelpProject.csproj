@@ -162,5 +162,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\YelpEngine\YelpEngine.csproj">
+      <Project>{4ced7792-acc5-4c28-921c-bcd08daf674b}</Project>
+      <Name>YelpEngine</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

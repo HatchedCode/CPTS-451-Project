@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="CheckInWindow" Height="982.958" Width="1854.754" ResizeMode="NoResize">
     <Grid>
-        
+        <Button x:Name="checkInButton" Content="Check In" HorizontalAlignment="Left" Height="116" Margin="1707,400,0,0" VerticalAlignment="Top" Width="132"/>
+
     </Grid>
 </Window>

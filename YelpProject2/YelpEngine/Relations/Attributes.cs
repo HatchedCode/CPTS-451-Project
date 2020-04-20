@@ -4,9 +4,10 @@ using System.Text;
 
 namespace YelpEngine
 {
-    internal class Attributes
+    public class Attributes
     {
         public string name { get; set; }
+        public string att_value { get; set; }
         public string business_id { get; set; }
     }
 }

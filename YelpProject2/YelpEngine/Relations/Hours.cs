@@ -4,7 +4,11 @@ using System.Text;
 
 namespace YelpEngine
 {
-    internal class Hours
+    public class Hours
     {
+        private string t_start;
+        private string t_end;
+        private string h_day;
+        private string businessID;
     }
 }

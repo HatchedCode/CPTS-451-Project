@@ -4,7 +4,7 @@ using System.Text;
 
 namespace YelpEngine
 {
-    internal class CheckIn
+    public class CheckIn
     {
         public string day { get; set; }
         public string time { get; set; }

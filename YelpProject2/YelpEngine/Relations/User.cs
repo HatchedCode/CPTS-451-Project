@@ -4,7 +4,7 @@ using System.Text;
 
 namespace YelpEngine
 {
-    internal class User
+    public class User
     {
         public string name { get; set; }
         public string id { get; set; }

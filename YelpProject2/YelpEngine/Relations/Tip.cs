@@ -4,8 +4,12 @@ using System.Text;
 
 namespace YelpEngine
 {
-    internal class Tip
+    public class Tip
     {
+        public string user_name { get; set; }
+        public string bus_name { get; set; }
+        public string bus_city { get; set; }
+
         public string business_id { get; set; }
         public string user_id { get; set; }
         public string likes { get; set; }

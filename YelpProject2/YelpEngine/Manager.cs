@@ -8,11 +8,9 @@ namespace YelpEngine
     {
         private User currentUser;
         private Business selectedBusiness;
-        private Query query;
 
         public Manager()
         {
-            this.query = new Query();
         }
 
         

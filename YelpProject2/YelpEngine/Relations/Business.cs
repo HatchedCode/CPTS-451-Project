@@ -2,7 +2,7 @@
 
 namespace YelpEngine
 {
-    internal class Business
+    public class Business
     {
         public string name { get; set; }
         public string state { get; set; }

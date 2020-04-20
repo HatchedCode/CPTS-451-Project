@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Linq;
+using System.Text.RegularExpressions;
+using YelpEngine;
+using System.Text;
 
 namespace YelpProject
 {
@@ -12,17 +16,15 @@ namespace YelpProject
     /// </summary>
     public partial class MainWindow : Window
     {
-        private TipsWindow tipWindow;
-        private CheckInWindow checkInWindow;
+        private TipsWindow tipWindow = new TipsWindow();
+        private CheckInWindow checkInWindow = new CheckInWindow();
         private bool tipsWindowIsOpen = false;
         private bool checkinWindowIsOpen = false;
 
         public MainWindow()
         {
             InitializeComponent();
-
-
-
+            initializeAll();
         }
 
 
@@ -30,45 +32,14 @@ namespace YelpProject
         {
             addColumns2BusinessGrid();
             addColumns2UserGrid();
+            addColumns2UserFriendsGrid();
+            addColumns2SelectedBusinessAttributes();
+            addColumns2SelectedBusinessCategories();
+            addColumns2UserTipsGrid();
+            addColumns2UserFriendsTipsGrid();
             addStates();
+            addUsers();
         }
-
-
-        //private string buildConnectionString(string host = "localhost", string username = "postgres", string database = "yelpdb", string password = "postgres")
-        //{
-        //    return "Host = " + host + "; Username = " + username + "; Database = " + database + "; password = " + password + ";";
-        //}
-
-        //public bool executeQuery(string sqlstr, Action<NpgsqlDataReader> myfunc)
-        //{
-        //    using (var connection = new NpgsqlConnection(buildConnectionString()))
-        //    {
-        //        connection.Open();
-        //        using (var cmd = new NpgsqlCommand())
-        //        {
-        //            cmd.Connection = connection;
-        //            cmd.CommandText = sqlstr;
-        //            try
-        //            {
-        //                var reader = cmd.ExecuteReader();
-        //                while (reader.Read())
-        //                    myfunc(reader);
-        //            }
-        //            catch (NpgsqlException ex)
-        //            {
-        //                Console.WriteLine(ex.Message.ToString());
-        //                return true;
-        //                //System.Windows.MessageBox.Show("SQL Error - " + ex.Message.ToString());
-        //            }
-        //            finally
-        //            {
-        //                connection.Close();
-        //            }
-
-        //            return false;
-        //        }
-        //    }
-        //}
 
         private void queryStates(NpgsqlDataReader R)
         {
@@ -92,45 +63,45 @@ namespace YelpProject
             cityListBox.Items.Add(R.GetString(0));
         }
 
-        private void stateList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            cityList.Items.Clear();
-            if (stateList.SelectedIndex > -1)
-            {
-                string sqlstr = "SELECT distinct busCity FROM BusinessTable WHERE busState = '" + stateList.SelectedItem.ToString() + "' ORDER BY busCity";
-                executeQuery(sqlstr, queryCity);
-            }
-        }
+        //private void stateList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        //{
+        //    cityList.Items.Clear();
+        //    if (stateList.SelectedIndex > -1)
+        //    {
+        //        string sqlstr = "SELECT distinct busCity FROM BusinessTable WHERE busState = '" + stateList.SelectedItem.ToString() + "' ORDER BY busCity";
+        //        executeQuery(sqlstr, queryCity);
+        //    }
+        //}
 
-        private void queryZip(NpgsqlDataReader R)
-        {
-            zipList.Items.Add(R.GetString(0));
-        }
+        //private void queryZip(NpgsqlDataReader R)
+        //{
+        //    zipList.Items.Add(R.GetString(0));
+        //}
 
-        private void cityList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            zipList.Items.Clear();
-            if (cityList.SelectedIndex > -1)
-            {
-                string sqlstr = "SELECT distinct busPostal FROM BusinessTable WHERE busState = '" + stateList.SelectedItem.ToString() + "' AND busCity = '" + cityList.SelectedItem.ToString() + "' ORDER BY busPostal";
-                executeQuery(sqlstr, queryZip);
-            }
-        }
+        //private void cityList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        //{
+        //    zipList.Items.Clear();
+        //    if (cityList.SelectedIndex > -1)
+        //    {
+        //        string sqlstr = "SELECT distinct busPostal FROM BusinessTable WHERE busState = '" + stateList.SelectedItem.ToString() + "' AND busCity = '" + cityList.SelectedItem.ToString() + "' ORDER BY busPostal";
+        //        executeQuery(sqlstr, queryZip);
+        //    }
+        //}
 
-        private void queryCity(NpgsqlDataReader R)
-        {
-            categoryListBox.Items.Add(R.GetString(0));
-        }
+        //private void queryCity(NpgsqlDataReader R)
+        //{
+        //    categoryListBox.Items.Add(R.GetString(0));
+        //}
 
-        private void queryZipcode(NpgsqlDataReader R)
-        {
-            categoryListBox.Items.Add(R.GetString(0));
-        }
+        //private void queryZipcode(NpgsqlDataReader R)
+        //{
+        //    categoryListBox.Items.Add(R.GetString(0));
+        //}
 
-        private void queryCategories(NpgsqlDataReader R)
-        {
-            categoryListBox.Items.Add(R.GetString(0));
-        }
+        //private void queryCategories(NpgsqlDataReader R)
+        //{
+        //    categoryListBox.Items.Add(R.GetString(0));
+        //}
 
         private void addColumns2BusinessGrid()
         {
@@ -209,17 +180,59 @@ namespace YelpProject
             col3.Width = 50;
             col4.Width = 100;
 
-            businessDataGrid.Columns.Add(col1);
-            businessDataGrid.Columns.Add(col2);
-            businessDataGrid.Columns.Add(col3);
-            businessDataGrid.Columns.Add(col4);
+            friendDataGrid.Columns.Add(col1);
+            friendDataGrid.Columns.Add(col2);
+            friendDataGrid.Columns.Add(col3);
+            friendDataGrid.Columns.Add(col4);
 
-            businessDataGrid.CanUserResizeColumns = false;
-            businessDataGrid.CanUserResizeRows = false;
-            businessDataGrid.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
-            businessDataGrid.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
-            businessDataGrid.SelectionMode = DataGridSelectionMode.Single;
+            friendDataGrid.CanUserResizeColumns = false;
+            friendDataGrid.CanUserResizeRows = false;
+            friendDataGrid.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
+            friendDataGrid.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+            friendDataGrid.IsEnabled= false;
         }
+
+        private void addColumns2UserFriendsTipsGrid()
+        {
+            DataGridTextColumn col1 = new DataGridTextColumn(); // User Name
+            DataGridTextColumn col2 = new DataGridTextColumn(); // Business Name
+            DataGridTextColumn col3 = new DataGridTextColumn(); // City
+            DataGridTextColumn col4 = new DataGridTextColumn(); // Text
+            DataGridTextColumn col5 = new DataGridTextColumn(); // Date
+
+            col1.Binding = new Binding("user_name");
+            col2.Binding = new Binding("bus_name");
+            col3.Binding = new Binding("bus_city");
+            col4.Binding = new Binding("text");
+            col5.Binding = new Binding("date");
+
+
+            col1.Header = "User Name";
+            col2.Header = "Business Name";
+            col3.Header = "City";
+            col4.Header = "Text";
+            col4.Header = "Date";
+
+            col1.Width = 200;
+            col2.Width = 70;
+            col3.Width = 70;
+            col4.Width = 100;
+            col5.Width = 70;
+
+            latestFriendTipsDataGrid.Columns.Add(col1);
+            latestFriendTipsDataGrid.Columns.Add(col2);
+            latestFriendTipsDataGrid.Columns.Add(col3);
+            latestFriendTipsDataGrid.Columns.Add(col4);
+            latestFriendTipsDataGrid.Columns.Add(col5);
+
+            latestFriendTipsDataGrid.CanUserResizeColumns = false;
+            latestFriendTipsDataGrid.CanUserResizeRows = false;
+            latestFriendTipsDataGrid.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
+            latestFriendTipsDataGrid.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+            latestFriendTipsDataGrid.IsEnabled = false;
+        }
+
+
 
         private void addColumns2SelectedBusinessAttributes()
         {
@@ -306,7 +319,7 @@ namespace YelpProject
         {
             DataGridTextColumn col1 = new DataGridTextColumn(); // user_id
 
-            col1.Binding = new Binding("user_id");
+            col1.Binding = new Binding("id");
             col1.Header = "User Id";
 
             col1.Width = 300;
@@ -336,14 +349,59 @@ namespace YelpProject
             lattextBox.IsEnabled = false;
         }
 
+        private void enableCurrentUserInfo()
+        {
+            //Disable all of the current user info buttons
+            curnametextBox.IsEnabled = true;
+            curstarstextBox.IsEnabled = true;
+            fanstextBox.IsEnabled = true;
+            yelpingsincetextBox.IsEnabled = true;
+            funnytextBox.IsEnabled = true;
+            cooltextBox.IsEnabled = true;
+            usefultextBox.IsEnabled = true;
+            tipCounttextBox.IsEnabled = true;
+            tiptotaltextBox.IsEnabled = true;
+            longtextBox.IsEnabled = true;
+            lattextBox.IsEnabled = true;
+        }
+
         private void queryUserFriends(NpgsqlDataReader R)
         {
-            friendDataGrid.Items.Add(new Friend() { name = R.GetString(0), bid = R.GetString(1) });
+            User newFriend = new User()
+            {
+                id = R.GetString(0),
+                name = R.GetString(1),
+                funny = int.Parse(R.GetString(0)),
+                yelping_since = R.GetString(1),
+                useful = int.Parse(R.GetString(0)),
+                fans = int.Parse(R.GetString(0)),
+                cool = int.Parse(R.GetString(0)),
+                avg_stars = float.Parse(R.GetString(0)),
+                tipcount = int.Parse(R.GetString(0)),
+                postcount = int.Parse(R.GetString(0)),
+                likecount = int.Parse(R.GetString(0)),
+                longitude = float.Parse(R.GetString(0)),
+                latitude = float.Parse(R.GetString(0))
+            };
+
+            friendDataGrid.Items.Add(newFriend);
+            //friendDataGrid.Items.Add(new User() { current_user_id = R.GetString(0), friend_user_id = R.GetString(1) });
         }
 
         private void queryUserTipFriends(NpgsqlDataReader R)
         {
-            latestFriendTipsDataGrid.Items.Add(new Friend() { name = R.GetString(0), bid = R.GetString(1) });
+            //0-User Name   1-Business  2-City  3-Text  4-Date
+            Tip newTipFriend = new Tip()
+            {
+                user_name = R.GetString(0),
+                bus_name = R.GetString(1),
+                bus_city = R.GetString(2),
+                text=R.GetString(3),
+                date=DateTime.Parse(R.GetString(4))
+            };
+
+            latestFriendTipsDataGrid.Items.Add(newTipFriend);
+            //latestFriendTipsDataGrid.Items.Add(new Tip() { name = R.GetString(0), bid = R.GetString(1) });
         }
 
         //private void queryBusiness(NpgsqlDataReader R)
@@ -357,43 +415,43 @@ namespace YelpProject
         }
 
 
-        private void queryCurUser(NpgsqlDataReader R)
-        {
-            setUserDataGrid.Items.Add(new User() { id = R.GetString(0), name = R.GetString(1) });
+        //private void queryCurUser(NpgsqlDataReader R)
+        //{
+        //    setUserDataGrid.Items.Add(new User() { id = R.GetString(0), name = R.GetString(1) });
             
-            //Set the other information for the current user
+        //    //Set the other information for the current user
 
-            //Set the current user (or we could just use the grid)
-        }
+        //    //Set the current user (or we could just use the grid)
+        //}
 
 
-        private void zipList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            categoryListBox.Items.Clear();
-            businessGrid.Items.Clear();
-            if (zipList.SelectedIndex > -1)
-            {
-                // Need to make the sql statement to extract category name
-                string sqlstr1 = "SELECT businessID FROM BusinessTable WHERE busPostal = '" + zipList.SelectedItem.ToString() + "' ORDER BY busPostal";
-                string sqlstr = "SELECT distinct cat_name FROM (" +
-                    sqlstr1 + ") as bus, CategoryTable WHERE CategoryTable.businessID = bus.businessID ORDER BY cat_name";
-                executeQuery(sqlstr, queryCategories);
+        //private void zipList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        //{
+        //    categoryListBox.Items.Clear();
+        //    businessGrid.Items.Clear();
+        //    if (zipList.SelectedIndex > -1)
+        //    {
+        //        // Need to make the sql statement to extract category name
+        //        string sqlstr1 = "SELECT businessID FROM BusinessTable WHERE busPostal = '" + zipList.SelectedItem.ToString() + "' ORDER BY busPostal";
+        //        string sqlstr = "SELECT distinct cat_name FROM (" +
+        //            sqlstr1 + ") as bus, CategoryTable WHERE CategoryTable.businessID = bus.businessID ORDER BY cat_name";
+        //        executeQuery(sqlstr, queryCategories);
 
-                string sqlstr2 = "SELECT busName, businessID FROM BusinessTable WHERE busPostal = '" + zipList.SelectedItem.ToString() + "' ORDER BY busName, businessID";
-                executeQuery(sqlstr2, queryBusiness);
-            }
-        }
+        //        string sqlstr2 = "SELECT busName, businessID FROM BusinessTable WHERE busPostal = '" + zipList.SelectedItem.ToString() + "' ORDER BY busName, businessID";
+        //        executeQuery(sqlstr2, queryBusiness);
+        //    }
+        //}
 
-        private void categoryListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            businessGrid.Items.Clear();
-            string sqlstr = "SELECT distinct BusinessTable.busName, BusinessTable.businessID FROM BusinessTable, CategoryTable WHERE BusinessTable.busPostal = '" + zipList.SelectedItem.ToString() + "'";
-            for (int i = 0; i < categoryListBox.SelectedItems.Count; i++)
-            {
-                sqlstr += " AND BusinessTable.businessID IN (SELECT businessID FROM CategoryTable WHERE cat_name = '" + categoryListBox.SelectedItems[i].ToString() + "')";
-            }
-            executeQuery(sqlstr, queryBusiness);
-        }
+        //private void categoryListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        //{
+        //    businessGrid.Items.Clear();
+        //    string sqlstr = "SELECT distinct BusinessTable.busName, BusinessTable.businessID FROM BusinessTable, CategoryTable WHERE BusinessTable.busPostal = '" + zipList.SelectedItem.ToString() + "'";
+        //    for (int i = 0; i < categoryListBox.SelectedItems.Count; i++)
+        //    {
+        //        sqlstr += " AND BusinessTable.businessID IN (SELECT businessID FROM CategoryTable WHERE cat_name = '" + categoryListBox.SelectedItems[i].ToString() + "')";
+        //    }
+        //    executeQuery(sqlstr, queryBusiness);
+        //}
 
 
         private void addSortResultsByItems()
@@ -406,37 +464,37 @@ namespace YelpProject
 
         }
 
-        private void queryTips(NpgsqlDataReader R)
-        {
-            tipListBox.Items.Add(R.GetString(0));
-        }
+        //private void queryTips(NpgsqlDataReader R)
+        //{
+        //    tipListBox.Items.Add(R.GetString(0));
+        //}
 
-        private void businessGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            tipListBox.Items.Clear();
-            if (businessGrid.Items.IndexOf(businessGrid.SelectedItem) > -1)
-            {
-                string sqlstr1 = "SELECT businessID FROM BusinessTable WHERE busName = '" + businessGrid.SelectedItem.ToString() + "' ORDER BY busName";
-                string sqlstr = "SELECT distinct text, date FROM (" +
-                    sqlstr1 + ") as bus FULL OUTER JOIN TipTable ON TipTable.businessID = bus.businessID ORDER BY date";
-                executeQuery(sqlstr, queryTips);
-                addUsers();
-            }
-        }
+        //private void businessGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        //{
+        //    tipListBox.Items.Clear();
+        //    if (businessGrid.Items.IndexOf(businessGrid.SelectedItem) > -1)
+        //    {
+        //        string sqlstr1 = "SELECT businessID FROM BusinessTable WHERE busName = '" + businessGrid.SelectedItem.ToString() + "' ORDER BY busName";
+        //        string sqlstr = "SELECT distinct text, date FROM (" +
+        //            sqlstr1 + ") as bus FULL OUTER JOIN TipTable ON TipTable.businessID = bus.businessID ORDER BY date";
+        //        executeQuery(sqlstr, queryTips);
+        //        addUsers();
+        //    }
+        //}
 
-        private void submitButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (businessGrid.Items.IndexOf(businessGrid.SelectedItem) > -1 && leaveTipTextBox.Text.Length > 0 && usersGrid.Items.IndexOf(usersGrid.SelectedItem) > -1)
-            {
-                string sqlstr = "INSERT INTO TipTable(businessID, user_id, likes, text, date) VALUES('" + (businessGrid.SelectedItem as Business).bid + "', '" +
-                 (usersGrid.SelectedItem as User).id + "', " + "0" + ", '" + leaveTipTextBox.Text + "', '" + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + "')";
-                executeQuery(sqlstr, queryTips);
-            }
-            else
-            {
-                MessageBox.Show("Something has gone wrong, FIX IT", "Error adding a tip.", MessageBoxButton.OK);
-            }
-        }
+        //private void submitButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    if (businessGrid.Items.IndexOf(businessGrid.SelectedItem) > -1 && leaveTipTextBox.Text.Length > 0 && usersGrid.Items.IndexOf(usersGrid.SelectedItem) > -1)
+        //    {
+        //        string sqlstr = "INSERT INTO TipTable(businessID, user_id, likes, text, date) VALUES('" + (businessGrid.SelectedItem as Business).bid + "', '" +
+        //         (usersGrid.SelectedItem as User).id + "', " + "0" + ", '" + leaveTipTextBox.Text + "', '" + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + "')";
+        //        executeQuery(sqlstr, queryTips);
+        //    }
+        //    else
+        //    {
+        //        MessageBox.Show("Something has gone wrong, FIX IT", "Error adding a tip.", MessageBoxButton.OK);
+        //    }
+        //}
 
         //private void usersDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         //{
@@ -446,41 +504,322 @@ namespace YelpProject
         //Business Datagrid
         private void dataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //Get the data for the datagrid
+            //Clear information on the selected business
+            clearSelectedBusinessInformation();
 
-            //Update the selected business
+            if(businessDataGrid.SelectedIndex > -1)
+            {
+                //Get the data form the datagrid
+                Business selectedBusiness = (businessDataGrid.SelectedItem as Business);
+
+                //Update the selected business -->NEED TO WRITE THE QUERIES FOR THESE
+                setSelectedBusinessInformation(selectedBusiness.name, selectedBusiness.address);
+                setSelectedBusinessCategories(selectedBusiness.bid);
+                setSelectedBusinessAttributes(selectedBusiness.bid);
+            }
 
         }
+
+        private void clearSelectedBusinessInformation()
+        {
+            //Bus name
+            busNamelabel.Content = "Business Name: ";
+            //adress
+            busaddlabel.Content = "Address: ";
+
+            //Date
+            operationslabel.Content = "Today(day):  Opens:    Closes:";
+
+            //Categories
+            categoryDataGrid.Items.Clear();
+
+            //Attributes
+            attributesDataGrid.Items.Clear();
+        }
+
+        private void setSelectedBusinessInformation(string name, string address)
+        {
+            //This information we can get from the businessDataGrid
+
+            //Bus name
+            busNamelabel.Content = "Business Name: ";
+            //adress
+            busaddlabel.Content = "Address: ";
+        }
+
+        private void setHours(NpgsqlDataReader R)
+        {
+            //Notice that in the original query we are passing in the real date
+
+            //Date
+            operationslabel.Content = "Today(day):  Opens:    Closes:";
+        }
+
+        private void setSelectedBusinessCategories(string business_id)
+        {
+            string sqlstr = "";
+            executeQuery(sqlstr, setSelectedBusinessCategories);
+        }
+
+        private void setSelectedBusinessCategories(NpgsqlDataReader R)
+        {
+            //Categories
+            categoryDataGrid.Items.Add(new Category() { name=R.GetString(0), businessID=R.GetString(1)});
+        }
+
+        private void setSelectedBusinessAttributes(string business_id)
+        {
+            string sqlstr = "";
+            executeQuery(sqlstr, setSelectedBusinessAttributes);
+        }
+
+
+        private void setSelectedBusinessAttributes(NpgsqlDataReader R)
+        {
+            //Attributes
+            attributesDataGrid.Items.Add(new Attributes() { name=R.GetString(0), att_value=R.GetString(1), business_id=R.GetString(2)});
+        }
+
 
         //Category Box changes
         private void busCategorylistBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            //string sqlstr = "SELECT distinct BusinessTable.busName, BusinessTable.businessID FROM BusinessTable, CategoryTable WHERE BusinessTable.busPostal = '" + zipList.SelectedItem.ToString() + "'";
+            //for (int i = 0; i < categoryListBox.SelectedItems.Count; i++)
+            //{
+            //    sqlstr += " AND BusinessTable.businessID IN (SELECT businessID FROM CategoryTable WHERE cat_name = '" + categoryListBox.SelectedItems[i].ToString() + "')";
+            //}
+            //executeQuery(sqlstr, queryBusiness);
         }
 
         //Edit current User information
         private void editbutton_Click(object sender, RoutedEventArgs e)
         {
+            //Save the state of the objects -- Or we can just look at the selected index in the datagrid
+            //Enable the Buttons
+            enableCurrentUserInfo();
+
+            //Now we wait
 
         }
 
         //Update current User information
         private void updatebutton_Click(object sender, RoutedEventArgs e)
         {
+            //Disbale Buttons
+            disableCurrentUserInfo();
 
+            //Check the old information with the new information, if same{do nothing} else{update}
+
+            //Update the information on the SQL database
+            string user_id = (setUserDataGrid.SelectedItem as User).id;
+
+            //Now we use the id to update the user information
         }
 
         //User entering in new current user (via name)
         private void setUsertextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
+            //get the text that the user entered
+            string userName = setUsertextBox.Text;
+            
+            switch(checkString(userName))
+            {
+                case 0:
+                    //There is nothing so we won't do anything
+                    clearUserInformation();
 
+                    //Now clear the userResultDataGrid
+                    setUserDataGrid.Items.Clear();
+                    friendDataGrid.Items.Clear();
+                    latestFriendTipsDataGrid.Items.Clear();
+                    break;
+                case 1:
+                    //We are querying the User Table looking for all Users whose ID start with the given value
+                    this.findUsersByID(userName);
+
+                    break;
+                case 2:
+                    //We are querying the User Table looking for all Users whose Name contains with the given value
+                    this.findUsersByName(userName);
+                    break;
+            }
+        }
+
+        private void clearUserInformation()
+        {
+            //Name
+            curnametextBox.Text = "";
+
+            //Stars
+            curstarstextBox.Text = "";
+            fanstextBox.Text = "";
+
+            //Yelping Since
+            yelpingsincetextBox.Text = "";
+
+            //Votes
+            funnytextBox.Text = "";
+            cooltextBox.Text = "";
+            usefultextBox.Text = "";
+
+            //Tip Count
+            tipCounttextBox.Text = "";
+
+            //Likes
+            tiptotaltextBox.Text = "";
+
+            //Location
+            longtextBox.Text = "";
+            lattextBox.Text = "";
+        }
+
+        private void queryUser(NpgsqlDataReader R)
+        {
+            User newUser = new User()
+            {
+                id = R.GetString(0),
+                name = R.GetString(1),
+                funny = int.Parse(R.GetString(2)),
+                yelping_since = R.GetString(3),
+                useful = int.Parse(R.GetString(4)),
+                fans = int.Parse(R.GetString(5)),
+                cool = int.Parse(R.GetString(6)),
+                avg_stars = float.Parse(R.GetString(7)),
+                tipcount = int.Parse(R.GetString(8)),
+                postcount = int.Parse(R.GetString(9)),
+                likecount = int.Parse(R.GetString(10)),
+                longitude = float.Parse(R.GetString(11)),
+                latitude = float.Parse(R.GetString(12))
+            };
+
+            setUserDataGrid.Items.Add(newUser);
+        }
+
+        //This method gets the the users whose names contain the value
+        private void findUsersByName(string name)
+        {
+            string sqlstr = "SELECT * FROM UserTable WHERE user_id ILIKE '%" + name + "%' ORDER BY user_id";
+            executeQuery(sqlstr, queryUser);
+        }
+
+        private void findUsersByID(string user_id)
+        {
+            string sqlstr = "SELECT * FROM UserTable WHERE user_id LIKE '" + user_id + "%' ORDER BY user_id";
+            executeQuery(sqlstr, queryUser);
+        }
+
+        //Gets user by the id
+        private void findUserByID(string user_id)
+        {
+            string sqlstr = "SELECT * FROM UserTable WHERE user_id == '" + user_id+ "'  ORDER BY user_id";
+            executeQuery(sqlstr, queryUser);
+        }
+
+        private int checkString(string str)
+        {
+            if(str == null || str.Length == 0)
+            {
+                return 0;
+            }
+            
+            if(Regex.IsMatch(str, "^[0-9]+$",RegexOptions.Compiled))
+            {
+                return 1;
+            }
+
+            return 2;
+        }
+
+        private void setBasicUserInfo(string name, string yelpSince)
+        {
+            //Name
+            curnametextBox.Text = name;
+
+            //Yelping Since
+            yelpingsincetextBox.Text = yelpSince;
+        }
+
+        private void setUserStars(string stars, string fans)
+        {
+            //Stars
+            curstarstextBox.Text = stars;
+
+            fanstextBox.Text = fans;
+        }
+
+        private void setUserVotes(string funny, string cool, string useful)
+        {
+            //Votes
+            funnytextBox.Text = funny;
+            
+            cooltextBox.Text = cool;
+
+            usefultextBox.Text = useful;
+        }
+
+        private void setUserLocation(string longitude, string latitude)
+        {
+            //Location
+            longtextBox.Text = longitude;
+
+            lattextBox.Text = latitude;
+        }
+
+        private void setUserTips(string count, string likes)
+        {
+            //Tip Count
+            tipCounttextBox.Text = count;
+
+            //Likes
+            tiptotaltextBox.Text = likes;
         }
 
         //User selected for new current user datagrid
         private void setUserDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            clearUserInformation();
+            friendDataGrid.Items.Clear();
+            latestFriendTipsDataGrid.Items.Clear();
 
+            //Get Selection and 
+            if (setUserDataGrid.Items.IndexOf(setUserDataGrid.SelectedItem) > -1)
+            {
+                //Query User Information
+                User curUser = (setUserDataGrid.SelectedItem as User);
+
+
+                //Query Friends
+
+
+                // Tips of Friends
+
+            }
         }
+
+        List<string> values = new List<string>();
+
+        string getAllUsersQuery()
+        {
+            return "SELECT * FROM UserTable ORDER BY user_id";
+        }
+        string getAllUserInformationByIDQuery(string user_id)
+        {
+            return "SELECT * FROM UserTable WHERE user_id == '"+ user_id +"' ORDER BY user_id";
+        }
+
+        string getUserInformationByIDQuery(string user_id)
+        {
+            return "SELECT name,funny, yelping_since, useful, fans, cool, average_stars, tipcount, likecount, longitude, latitude FROM UserTable WHERE user_id == '" + user_id + "' ORDER BY user_id";
+        }
+
+        //private void getAllUserInformationByID(NpgsqlDataReader R)
+        //{
+        //    for (int index=0; index < R.FieldCount; index++)
+        //    {
+        //        this.values.Append(R.GetString(index));
+        //    } 
+        //}
 
         //Resort the datagrid using the chosen option
         private void sortResultsByComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -491,31 +830,146 @@ namespace YelpProject
         //Show the next window (checkin)
         private void showCheckinsButton_Click(object sender, RoutedEventArgs e)
         {
-
+            if (tipsWindowIsOpen || checkinWindowIsOpen)
+            {
+                MessageBox.Show("Sorry the Checkin or Tip Window is still Open. CLOSE IT!", "Error Opening New Window.", MessageBoxButton.OK);
+            }
+            else
+            {
+                checkinWindowIsOpen = true;
+                checkInWindow.ShowDialog();
+                checkinWindowIsOpen = false;
+            }
         }
 
         //Show the next window (Tips)
         private void showTipsButton_Click(object sender, RoutedEventArgs e)
         {
-
+            if (tipsWindowIsOpen || checkinWindowIsOpen)
+            {
+                MessageBox.Show("Sorry the Checkin or Tip Window is still Open. CLOSE IT!", "Error Opening New Window.", MessageBoxButton.OK);
+            }
+            else
+            {
+                tipsWindowIsOpen = true;
+                tipWindow.ShowDialog();
+                tipsWindowIsOpen = false;
+            }
         }
 
         //City is selected
         private void cityListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            //Keep in mind that this has multi-selection
+            //And we do not want to clear the results box, but we will need to reload it
 
         }
 
-        //Zip code is selected
+        //Zip code is selected --> FINISHED
         private void zipcodeListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            StringBuilder str = new StringBuilder(" ");
+            busCategorylistBox.Items.Clear();
+            if(zipcodeListBox.SelectedItems.Count > 0)
+            {
+                string str2 = " ORDER BY busPostal";
+                string sqlstr1 = "SELECT businessID FROM BusinessTable WHERE busPostal = '" + zipcodeListBox.SelectedItems[0].ToString() + "' ";
+                for (int i = 1; i < zipcodeListBox.SelectedItems.Count; i++)
+                {
+                    str.Append("OR busPostal = '" + zipcodeListBox.SelectedItems[i].ToString() + "'  ");
+                }
+                sqlstr1 = sqlstr1 + str.ToString() + str2;
 
+                // Need to make the sql statement to extract category name
+                string sqlstr = "SELECT distinct cat_name FROM (" +
+                    sqlstr1 + ") as bus, CategoryTable WHERE CategoryTable.businessID = bus.businessID ORDER BY cat_name";
+                executeQuery(sqlstr, querySearchCategories);
+            }
         }
+
+        private void querySearchCategories(NpgsqlDataReader R)
+        {
+            busCategorylistBox.Items.Add(R.GetString(0));
+        }
+
+        //private void queryCity(NpgsqlDataReader R)
+        //{
+        //    cityList.Items.Add(R.GetString(0));
+        //}
 
         //A state is selected
         private void statecomboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            cityListBox.Items.Clear();
+            if (statecomboBox.SelectedIndex > -1)
+            {
+                string sqlstr = "SELECT distinct busCity FROM BusinessTable WHERE busState = '" + statecomboBox.SelectedItem.ToString() + "' ORDER BY busCity";
+                executeQuery(sqlstr, queryCity);
+            }
+        }
 
+
+        private string buildConnectionString(string host = "localhost", string username = "postgres", string database = "yelpdb", string password = "postgres")
+        {
+            return "Host = " + host + "; Username = " + username + "; Database = " + database + "; password = " + password + ";";
+        }
+
+        private void executeQuery(string sqlstr, Action<NpgsqlDataReader> myfunc)
+        {
+            using (var connection = new NpgsqlConnection(buildConnectionString()))
+            {
+                connection.Open();
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+                    cmd.CommandText = sqlstr;
+                    try
+                    {
+                        var reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                            myfunc(reader);
+                    }
+                    catch (NpgsqlException ex)
+                    {
+                        Console.WriteLine(ex.Message.ToString());
+                        System.Windows.MessageBox.Show("SQL Error - " + ex.Message.ToString());
+                    }
+                    finally
+                    {
+                        connection.Close();
+                    }
+
+                }
+            }
+        }
+
+        private void searchBusinessButton_Click(object sender, RoutedEventArgs e)
+        {
+            //Clear the ResultsBox
+            businessDataGrid.Items.Clear();
+
+            //Now gather all of the information that we need
+            //State,city,postalCode,businessCategory,price, Attributes
+            //Groupby: 
+
+            //Call execute Query with BusinessQuery --> THIS IS ONE HEAVY QUERY WE ARE ABOUT TO MAKE ;)
+        }
+
+        //Add Categories to the added categories list box
+        private void addCatButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (busCategorylistBox.SelectedIndex > -1)
+            {
+                addedCategoriesListBox.Items.Add(busCategorylistBox.Items[busCategorylistBox.SelectedIndex].ToString());
+            }
+        }
+
+        private void removeCatButton_Click(object sender, RoutedEventArgs e)
+        {
+            if(addedCategoriesListBox.SelectedIndex > -1)
+            {
+                addedCategoriesListBox.Items.RemoveAt(addedCategoriesListBox.SelectedIndex);
+            }
         }
     }
 }
