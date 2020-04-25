@@ -1,13 +1,12 @@
 ﻿using Npgsql;
 using System;
 using System.Collections.Generic;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Linq;
-using System.Text.RegularExpressions;
 using YelpEngine;
-using System.Text;
 
 namespace YelpProject
 {
@@ -356,15 +355,6 @@ namespace YelpProject
         private void enableCurrentUserInfo()
         {
             //Disable all of the current user info buttons
-            curnametextBox.IsEnabled = true;
-            curstarstextBox.IsEnabled = true;
-            fanstextBox.IsEnabled = true;
-            yelpingsincetextBox.IsEnabled = true;
-            funnytextBox.IsEnabled = true;
-            cooltextBox.IsEnabled = true;
-            usefultextBox.IsEnabled = true;
-            tipCounttextBox.IsEnabled = true;
-            tiptotaltextBox.IsEnabled = true;
             longtextBox.IsEnabled = true;
             lattextBox.IsEnabled = true;
         }
@@ -373,19 +363,33 @@ namespace YelpProject
         {
             User newFriend = new User()
             {
-                id = R.GetString(0),
-                name = R.GetString(1),
-                funny = R.GetString(2),
-                yelping_since = R.GetString(3),
-                useful = R.GetString(4),
-                fans = R.GetString(5),
-                cool = R.GetString(6),
-                avg_stars = R.GetString(7),
-                tipcount = R.GetString(8),
-                postcount = R.GetString(9),
-                likecount = R.GetString(10),
-                longitude = R.GetString(11),
-                latitude = R.GetString(12)
+                //id = R.GetString(0),
+                //name = R.GetString(1),
+                //funny = R.GetString(2),
+                //yelping_since = R.GetString(3),
+                //useful = R.GetString(4),
+                //fans = R.GetString(5),
+                //cool = R.GetString(6),
+                //avg_stars = R.GetString(7),
+                //tipcount = R.GetString(8),
+                //postcount = R.GetString(9),
+                //likecount = R.GetString(10),
+                //longitude = R.GetString(11),
+                //latitude = R.GetString(12)
+
+                id = R.GetValue(0).ToString(),
+                name = R.GetValue(1).ToString(),
+                funny = R.GetValue(2).ToString(),
+                yelping_since = R.GetValue(3).ToString(),
+                useful = R.GetValue(4).ToString(),
+                fans = R.GetValue(5).ToString(),
+                cool = R.GetValue(6).ToString(),
+                avg_stars = R.GetValue(7).ToString(),
+                tipcount = R.GetValue(8).ToString(),
+                postcount = R.GetValue(9).ToString(),
+                likecount = R.GetValue(10).ToString(),
+                longitude = R.GetValue(11).ToString(),
+                latitude = R.GetValue(12).ToString()
             };
 
             friendDataGrid.Items.Add(newFriend);
@@ -731,7 +735,7 @@ namespace YelpProject
         //Gets user by the id
         private void findUserByID(string user_id)
         {
-            string sqlstr = "SELECT * FROM UserTable WHERE user_id == '" + user_id+ "'  ORDER BY user_id";
+            string sqlstr = "SELECT * FROM UserTable WHERE user_id = '" + user_id+ "'  ORDER BY user_id";
             executeQuery(sqlstr, queryUser);
         }
 
@@ -813,7 +817,8 @@ namespace YelpProject
                 setUserTips(curUser.tipcount, curUser.likecount);
 
                 //Query Friends
-
+                string sqlstr = "SELECT * FROM UserTable WHERE user_id IN (SELECT friend_user_id FROM FriendTable WHERE current_user_id = '" + curUser.id + "') ORDER BY user_id";
+                executeQuery(sqlstr, queryUserFriends);
 
                 // Tips of Friends
 
@@ -1042,5 +1047,6 @@ namespace YelpProject
 
             Application.Current.Shutdown();
         }
+
     }
 }
