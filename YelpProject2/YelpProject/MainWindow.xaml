@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:YelpProject"
         mc:Ignorable="d"
-        Title="Yelp App" Height="982.958" Width="1854.754" ResizeMode="NoResize">
+        Title="Yelp App" Height="982.958" Width="1854.754" ResizeMode="NoResize" Closing="Window_Closing">
     <Grid Margin="0,0,-6,-3" Height="957" VerticalAlignment="Top">
         <TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="957" VerticalAlignment="Top" Width="1852" Margin="0,0,-7,0">
             <TabItem Header="User Information">
@@ -92,9 +92,9 @@
                     <GroupBox x:Name="selectLocationGroupBox" Header="Select Location" HorizontalAlignment="Left" Height="249" Margin="7,13,0,0" VerticalAlignment="Top" Width="198" Grid.ColumnSpan="2">
                         <Grid HorizontalAlignment="Left" Height="229" Margin="5,0,0,0" VerticalAlignment="Top" Width="180">
                             <Label x:Name="label" Content="State:" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top" Width="45"/>
-                            <ComboBox x:Name="statecomboBox" HorizontalAlignment="Left" Margin="50,0,0,0" VerticalAlignment="Top" Width="120" Height="25" SelectionChanged="statecomboBox_SelectionChanged"/>
+                            <ComboBox x:Name="statecomboBox" HorizontalAlignment="Left" Margin="50,0,0,204" VerticalAlignment="Bottom" Width="120" Height="25" SelectionChanged="statecomboBox_SelectionChanged"/>
                             <Label x:Name="cityLabel" Content="City" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top" Width="45" Margin="0,30,0,0"/>
-                            <ListBox x:Name="cityListBox" HorizontalAlignment="Left" Height="64" Margin="0,60,0,0" VerticalAlignment="Top" Width="170" SelectionChanged="cityListBox_SelectionChanged"/>
+                            <ListBox x:Name="cityListBox" HorizontalAlignment="Left" Margin="0,60,0,105" Width="170" SelectionChanged="cityListBox_SelectionChanged"/>
                             <Label x:Name="zipcodeLabel" Content="Zipcode:" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top" Width="69" Margin="0,135,0,0"/>
                             <ListBox x:Name="zipcodeListBox" HorizontalAlignment="Left" Height="64" Margin="0,160,0,0" VerticalAlignment="Top" Width="170" SelectionChanged="zipcodeListBox_SelectionChanged"/>
                         </Grid>

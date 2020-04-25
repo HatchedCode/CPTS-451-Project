@@ -40,6 +40,9 @@ namespace YelpProject
             addStates();
             addUsers();
             disableCurrentUserInfo();
+            cityListBox.SelectionMode = SelectionMode.Multiple;
+            zipcodeListBox.SelectionMode = SelectionMode.Multiple;
+            busCategorylistBox.SelectionMode = SelectionMode.Multiple;
         }
 
         private void queryStates(NpgsqlDataReader R)
@@ -74,10 +77,10 @@ namespace YelpProject
         //    }
         //}
 
-        //private void queryZip(NpgsqlDataReader R)
-        //{
-        //    zipList.Items.Add(R.GetString(0));
-        //}
+        private void queryZip(NpgsqlDataReader R)
+        {
+            zipcodeListBox.Items.Add(R.GetString(0));
+        }
 
         //private void cityList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         //{
@@ -878,8 +881,33 @@ namespace YelpProject
         private void cityListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             //Keep in mind that this has multi-selection
-            //And we do not want to clear the results box, but we will need to reload it
+            zipcodeListBox.Items.Clear();
+            if (cityListBox.SelectedIndex > -1)
+            {
+                StringBuilder postals = new StringBuilder("");
+                string sqlstr = "SELECT distinct busPostal FROM BusinessTable WHERE busState = '" + statecomboBox.SelectedItem.ToString() + "' ";
+                for (int index=0; index < cityListBox.SelectedItems.Count; index++)
+                {
+                    if(index == 0)
+                    {
+                        postals.Append(" AND busCity IN (");
+                        postals.Append("'" + cityListBox.SelectedItems[index].ToString() + "' ");
+                    }
+                    else
+                    {
+                        postals.Append(", '" + cityListBox.SelectedItems[index].ToString() + "' ");
+                    }
 
+                    if(index+1 == cityListBox.SelectedItems.Count)
+                    {
+                        postals.Append(") ");
+                    }
+                }
+
+                string end = " ORDER BY busPostal";
+                sqlstr = sqlstr + postals.ToString() + end;
+                executeQuery(sqlstr, queryZip);
+            }
         }
 
         //Zip code is selected --> FINISHED
@@ -969,24 +997,47 @@ namespace YelpProject
             //State,city,postalCode,businessCategory,price, Attributes
             //Groupby: 
 
-            //Call execute Query with BusinessQuery --> THIS IS ONE HEAVY QUERY WE ARE ABOUT TO MAKE ;)
+            //Call execute Query with BusinessQuery --> QUITE EXPENSIVE HERE;)
         }
 
         //Add Categories to the added categories list box
         private void addCatButton_Click(object sender, RoutedEventArgs e)
         {
-            if (busCategorylistBox.SelectedIndex > -1)
+            if (busCategorylistBox.SelectedItems.Count > 0)
             {
-                addedCategoriesListBox.Items.Add(busCategorylistBox.Items[busCategorylistBox.SelectedIndex].ToString());
+                for(int index=0; index < busCategorylistBox.SelectedItems.Count; index++)
+                {
+                    addedCategoriesListBox.Items.Add(busCategorylistBox.SelectedItems[index].ToString());
+                }
+                addedCategoriesListBox.IsEnabled = true;
+                addedCategoriesListBox.SelectionMode = SelectionMode.Multiple;
             }
         }
 
         private void removeCatButton_Click(object sender, RoutedEventArgs e)
         {
-            if(addedCategoriesListBox.SelectedIndex > -1)
+            if(addedCategoriesListBox.SelectedItems.Count > 0)
             {
-                addedCategoriesListBox.Items.RemoveAt(addedCategoriesListBox.SelectedIndex);
+                while (addedCategoriesListBox.SelectedIndex != -1)
+                {
+                    this.addedCategoriesListBox.Items.RemoveAt(addedCategoriesListBox.SelectedIndex);
+                }
+                this.addedCategoriesListBox.Items.Refresh();
             }
+            else
+            {
+                addedCategoriesListBox.IsEnabled = false;
+            }
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            for(int index = 0; index < Application.Current.Windows.Count; index++)
+            {
+                Application.Current.Windows[index].Close();
+            }
+
+            Application.Current.Shutdown();
         }
     }
 }
