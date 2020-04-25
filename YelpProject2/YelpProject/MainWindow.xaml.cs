@@ -612,15 +612,14 @@ namespace YelpProject
         {
             //Disbale Buttons
             disableCurrentUserInfo();
+            Double newLong = Convert.ToDouble(longtextBox.Text);
+            Double newLat = Convert.ToDouble(lattextBox.Text);
 
             //Check the old information with the new information, if same{do nothing} else{update}
 
-            string sqlStr = "UPDATE User SET longitude = newLong, latitude = newLat WHERE userID";
-            //SET longitude = new longitude and latitude = new latitude
-            //WHERE userID = currentUserID
-
             //Update the information on the SQL database
             string user_id = (setUserDataGrid.SelectedItem as User).id;
+            string sqlStr = "UPDATE User SET longitude = '" + longtextBox.Text + "' latitude = '" + lattextBox.Text + "' WHERE userID = '" + user_id + "'";
 
             //Now we use the id to update the user information
         }
