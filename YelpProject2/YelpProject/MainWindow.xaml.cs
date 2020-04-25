@@ -615,6 +615,10 @@ namespace YelpProject
 
             //Check the old information with the new information, if same{do nothing} else{update}
 
+            string sqlStr = "UPDATE User SET longitude = newLong, latitude = newLat WHERE userID";
+            //SET longitude = new longitude and latitude = new latitude
+            //WHERE userID = currentUserID
+
             //Update the information on the SQL database
             string user_id = (setUserDataGrid.SelectedItem as User).id;
 
