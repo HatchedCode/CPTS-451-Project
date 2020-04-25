@@ -23,5 +23,19 @@ namespace YelpProject
         {
             InitializeComponent();
         }
+
+        private void columnChart()
+        {
+            List<KeyValuePair<string, int>> myChartData = new List<KeyValuePair<string, int>>();
+            myChartData.Add(new KeyValuePair<string, int>("Sun", 70));
+            myChartData.Add(new KeyValuePair<string, int>("Mon", 50));
+            myChartData.Add(new KeyValuePair<string, int>("Tue", 40));
+            myChartData.Add(new KeyValuePair<string, int>("Wed", 10));
+            myChartData.Add(new KeyValuePair<string, int>("Thu", 30));
+            myChartData.Add(new KeyValuePair<string, int>("Fri", 40));
+            myChartData.Add(new KeyValuePair<string, int>("Sat", 60));
+
+            checkChart.DataContext = myChartData;
+        }
     }
 }
