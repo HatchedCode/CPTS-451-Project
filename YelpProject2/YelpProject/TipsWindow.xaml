@@ -15,7 +15,7 @@
         <Button x:Name="addNewTipbutton" Content="Add Tip" HorizontalAlignment="Left" Height="98" Margin="1661,34,0,0" VerticalAlignment="Top" Width="142" Click="addNewTipbutton_Click"/>
         <GroupBox x:Name="busTipsGroupBox" Header="Business Tips" HorizontalAlignment="Left" Height="444" Margin="35,178,0,0" VerticalAlignment="Top" Width="1559">
             <Grid HorizontalAlignment="Left" Height="399" Margin="10,10,0,0" VerticalAlignment="Top" Width="1533">
-                <DataGrid x:Name="busTipsDataGrid" HorizontalAlignment="Left" Height="389" VerticalAlignment="Top" Width="1523"/>
+                <DataGrid x:Name="busTipsDataGrid" HorizontalAlignment="Left" Height="389" VerticalAlignment="Top" Width="1523" SelectionChanged="busTipsDataGrid_SelectionChanged"/>
             </Grid>
         </GroupBox>
         <GroupBox x:Name="friendTipsGroupBox" Header="Friends who reviewed this business" HorizontalAlignment="Left" Height="304" Margin="34,640,0,0" VerticalAlignment="Top" Width="1560">

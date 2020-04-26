@@ -155,7 +155,7 @@ namespace YelpProject
             col7.Binding = new Binding("numTips");
             col8.Binding = new Binding("numCheckins");
 
-            col1.Header = "BusinessName";
+            col1.Header = "Business Name";
             col2.Header = "Address";
             col3.Header = "City";
             col4.Header = "State";
@@ -165,8 +165,8 @@ namespace YelpProject
             col8.Header = "Total Checkins";
 
             col1.Width = 300;
-            col2.Width = 150;
-            col3.Width = 100;
+            col2.Width = 200;
+            col3.Width = 150;
             col4.Width = 100;
             col5.Width = 150;
             col6.Width = 100;
@@ -634,7 +634,7 @@ namespace YelpProject
             }
             else if (att_val == "False" || att_val == "no")
             {
-
+                // do nothing
             }
             else
             {
