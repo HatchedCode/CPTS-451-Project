@@ -81,7 +81,7 @@
                     </GroupBox>
                 </Grid>
             </TabItem>
-            <TabItem Header="Business Search">
+            <TabItem Header="Business Search" Height="22" VerticalAlignment="Top">
                 <Grid Background="#FFE5E5E5" Margin="0,0,-2,-2">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="46*"/>

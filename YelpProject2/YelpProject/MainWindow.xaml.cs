@@ -1,6 +1,7 @@
 ﻿using Npgsql;
 using System;
 using System.Collections.Generic;
+using System.Device.Location;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -19,13 +20,41 @@ namespace YelpProject
         private CheckInWindow checkInWindow = new CheckInWindow();
         private bool tipsWindowIsOpen = false;
         private bool checkinWindowIsOpen = false;
-
+        private List<string> checkboxInfo = new List<string>();
         public MainWindow()
         {
             InitializeComponent();
             initializeAll();
         }
 
+        private void addCheckBoxes()
+        {
+            checkboxInfo.Add("oneCheckBox");
+            checkboxInfo.Add("twoCheckBox");
+            checkboxInfo.Add("threeCheckBox");
+            checkboxInfo.Add("fourCheckBox");
+
+            checkboxInfo.Add("creditCardCheckBox");
+            checkboxInfo.Add("reservationCheckBox");
+            checkboxInfo.Add("wheelchairCheckBox");
+            checkboxInfo.Add("outdoorCheckBox");
+            checkboxInfo.Add("kidsCheckBox");
+            checkboxInfo.Add("groupsCheckBox");
+            checkboxInfo.Add("deliveryCheckBox");
+            checkboxInfo.Add("takeoutCheckBox");
+            checkboxInfo.Add("wifiCheckBox");
+            checkboxInfo.Add("bikeCheckBox");
+
+            checkboxInfo.Add("breakfastCheckBox");
+            checkboxInfo.Add("lunchCheckBox");
+            checkboxInfo.Add("brunchCheckBox");
+            checkboxInfo.Add("dinnerCheckBox");
+            checkboxInfo.Add("dessertCheckBox");
+            checkboxInfo.Add("lateNightCheckBox");
+
+
+
+        }
 
         private void initializeAll()
         {
@@ -138,11 +167,11 @@ namespace YelpProject
             col1.Width = 300;
             col2.Width = 150;
             col3.Width = 100;
-            col4.Width = 50;
-            col5.Width = 50;
-            col6.Width = 50;
-            col7.Width = 50;
-            col8.Width = 50;
+            col4.Width = 100;
+            col5.Width = 150;
+            col6.Width = 100;
+            col7.Width = 100;
+            col8.Width = 100;
 
             businessDataGrid.Columns.Add(col1);
             businessDataGrid.Columns.Add(col2);
@@ -240,20 +269,26 @@ namespace YelpProject
         private void addColumns2SelectedBusinessAttributes()
         {
             DataGridTextColumn col1 = new DataGridTextColumn(); // att_name
+            DataGridTextColumn col2 = new DataGridTextColumn();
 
-            col1.Binding = new Binding("att_name");
+            col1.Binding = new Binding("name");
+            //col2.Binding = new Binding("att_name");
 
             col1.Header = "Attribute Name";
+            //col2.Header = "Value";
 
-            col1.Width = 100;
+            col1.Width = 250;
+            //col2.Width = 100;
 
             attributesDataGrid.Columns.Add(col1);
+            //attributesDataGrid.Columns.Add(col2);
+
 
             attributesDataGrid.CanUserResizeColumns = false;
             attributesDataGrid.CanUserResizeRows = false;
             attributesDataGrid.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
             attributesDataGrid.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
-            attributesDataGrid.IsEnabled = false;
+            attributesDataGrid.IsEnabled = true;
             //businessDataGrid.SelectionMode = DataGridSelectionMode.Single;
         }
 
@@ -261,11 +296,11 @@ namespace YelpProject
         {
             DataGridTextColumn col1 = new DataGridTextColumn(); // cat_name
 
-            col1.Binding = new Binding("cat_name");
+            col1.Binding = new Binding("name");
 
             col1.Header = "Category Name";
 
-            col1.Width = 100;
+            col1.Width = 250;
 
             categoryDataGrid.Columns.Add(col1);
 
@@ -273,7 +308,7 @@ namespace YelpProject
             categoryDataGrid.CanUserResizeRows = false;
             categoryDataGrid.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
             categoryDataGrid.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
-            categoryDataGrid.IsEnabled = false;
+            categoryDataGrid.IsEnabled = true;
             //businessDataGrid.SelectionMode = DataGridSelectionMode.Single;
         }
 
@@ -304,17 +339,17 @@ namespace YelpProject
             col4.Width = 300;
             col5.Width = 100;
 
-            businessDataGrid.Columns.Add(col1);
-            businessDataGrid.Columns.Add(col2);
-            businessDataGrid.Columns.Add(col3);
-            businessDataGrid.Columns.Add(col4);
-            businessDataGrid.Columns.Add(col5);
+            latestFriendTipsDataGrid.Columns.Add(col1);
+            latestFriendTipsDataGrid.Columns.Add(col2);
+            latestFriendTipsDataGrid.Columns.Add(col3);
+            latestFriendTipsDataGrid.Columns.Add(col4);
+            latestFriendTipsDataGrid.Columns.Add(col5);
 
-            businessDataGrid.CanUserResizeColumns = false;
-            businessDataGrid.CanUserResizeRows = false;
-            businessDataGrid.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
-            businessDataGrid.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
-            businessDataGrid.SelectionMode = DataGridSelectionMode.Single;
+            latestFriendTipsDataGrid.CanUserResizeColumns = false;
+            latestFriendTipsDataGrid.CanUserResizeRows = false;
+            latestFriendTipsDataGrid.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
+            latestFriendTipsDataGrid.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+            latestFriendTipsDataGrid.SelectionMode = DataGridSelectionMode.Single;
         }
 
 
@@ -419,14 +454,16 @@ namespace YelpProject
 
         private void queryBusinessSearchResult(NpgsqlDataReader R)
         {
-            businessDataGrid.Items.Add(new Business() { name = R.GetString(0), bid = R.GetString(1) });
+            //businessDataGrid.Items.Add(new Business() { name = R.GetString(0), bid = R.GetString(1) }); GetValue(0).ToString()
+            string calculated_distance = "FA";
+            businessDataGrid.Items.Add(new Business() { bid = R.GetValue(7).ToString(), name = R.GetValue(0).ToString(), address = R.GetValue(1).ToString(), city = R.GetValue(2).ToString(), state = R.GetValue(3).ToString(), stars = R.GetValue(4).ToString(), numTips = R.GetValue(5).ToString(), numCheckins = R.GetValue(6).ToString(), distance = calculated_distance });
         }
 
 
         //private void queryCurUser(NpgsqlDataReader R)
         //{
         //    setUserDataGrid.Items.Add(new User() { id = R.GetString(0), name = R.GetString(1) });
-            
+
         //    //Set the other information for the current user
 
         //    //Set the current user (or we could just use the grid)
@@ -565,27 +602,49 @@ namespace YelpProject
 
         private void setSelectedBusinessCategories(string business_id)
         {
-            string sqlstr = "";
+            //string sqlstr = "SELECT C.cat_name, C.businessID FROM CategoryTable as C WHERE C.businessID = '" + business_id + "'";
+            string sqlstr = "SELECT C.cat_name FROM CategoryTable as C WHERE C.businessID = '" + business_id + "' ORDER BY C.cat_name";
             executeQuery(sqlstr, setSelectedBusinessCategories);
         }
 
         private void setSelectedBusinessCategories(NpgsqlDataReader R)
         {
             //Categories
-            categoryDataGrid.Items.Add(new Category() { name=R.GetString(0), businessID=R.GetString(1)});
+            //categoryDataGrid.Items.Add(new Category() { name=R.GetValue(0).ToString(), businessID=R.GetValue(1).ToString() });
+            categoryDataGrid.Items.Add(new Category() { name = R.GetValue(0).ToString() });
         }
 
         private void setSelectedBusinessAttributes(string business_id)
         {
-            string sqlstr = "";
+            string sqlstr = "SELECT A.att_name, A.value FROM AttributesTable as A WHERE A.businessID = '" + business_id + "' ORDER BY A.att_name, A.value";
             executeQuery(sqlstr, setSelectedBusinessAttributes);
         }
-
 
         private void setSelectedBusinessAttributes(NpgsqlDataReader R)
         {
             //Attributes
-            attributesDataGrid.Items.Add(new Attributes() { name=R.GetString(0), att_value=R.GetString(1), business_id=R.GetString(2)});
+            //attributesDataGrid.Items.Add(new Attributes() { name=R.GetValue(0).ToString(), att_value=R.GetValue(1).ToString(), business_id=R.GetValue(2).ToString() });
+            //attributesDataGrid.Items.Add(new Attributes() { name = R.GetValue(0).ToString(), att_value = R.GetValue(1).ToString() });
+
+            string att_val = R.GetValue(1).ToString();
+
+            if (att_val == "True")
+            {
+                attributesDataGrid.Items.Add(new Attributes() { name = R.GetValue(0).ToString() });
+            }
+            else if (att_val == "False" || att_val == "no")
+            {
+
+            }
+            else
+            {
+                attributesDataGrid.Items.Add(new Attributes() { name = R.GetValue(0).ToString() + " (" + R.GetValue(1).ToString() + ")" });
+            }
+
+            //attributesDataGrid.Items.Add(new Attributes() { name = R.GetValue(0).ToString() + " (" + R.GetValue(1).ToString() + ")" });
+
+
+
         }
 
 
@@ -622,9 +681,15 @@ namespace YelpProject
             //Check the old information with the new information, if same{do nothing} else{update}
 
             //Update the information on the SQL database
-            string user_id = (setUserDataGrid.SelectedItem as User).id;
-            string sqlStr = "UPDATE User SET longitude = '" + longtextBox.Text + "' latitude = '" + lattextBox.Text + "' WHERE userID = '" + user_id + "'";
-
+            if(setUserDataGrid.SelectedIndex > -1)
+            {
+                string user_id = (setUserDataGrid.SelectedItem as User).id;
+                string sqlStr = "UPDATE User SET longitude = '" + longtextBox.Text + "' latitude = '" + lattextBox.Text + "' WHERE userID = '" + user_id + "'";
+            }
+            else
+            {
+                MessageBox.Show("Sorry error trying to retrieve the selected user", "Error UPDATING Lat/Long", MessageBoxButton.OK);
+            }
             //Now we use the id to update the user information
         }
 
@@ -962,7 +1027,7 @@ namespace YelpProject
         }
 
 
-        private string buildConnectionString(string host = "localhost", string username = "postgres", string database = "yelpdb", string password = "postgres")
+        private string buildConnectionString(string host = "localhost", string username = "postgres", string database = "yelpdb", string password = "0622")
         {
             return "Host = " + host + "; Username = " + username + "; Database = " + database + "; password = " + password + ";";
         }
@@ -1004,6 +1069,110 @@ namespace YelpProject
             //Now gather all of the information that we need
             //State,city,postalCode,businessCategory,price, Attributes
             //Groupby: 
+            string sqlstr = "SELECT distinct B.busName, B.busaddress, B.buscity, B.busstate, B.stars, B.numtips, B.numcheckins, B.businessID FROM BusinessTable as B, CategoryTable as C WHERE buspostal = '" + zipcodeListBox.SelectedItem.ToString() + "'";
+            for (int i = 0; i < addedCategoriesListBox.Items.Count; i++)
+            {
+                sqlstr += " AND B.businessid IN (SELECT businessID FROM CategoryTable as C WHERE C.cat_name = '" + addedCategoriesListBox.Items[i] + "')";
+            }
+
+
+            //int index = 0;
+            //foreach (string checkboxName in this.checkboxInfo)
+            //{
+            //    var curCheckbox = (CheckBox)this.FindName(checkboxName);
+            //    if ((bool)curCheckbox.IsChecked)
+            //    {
+            //        sqlstr += " AND B.businessid IN (SELECT businessID FROM AttributesTable as A WHERE A.att_name = '" + curCheckbox + "')";
+            //    }
+            //}
+
+            if ((bool)oneCheckBox.IsChecked) 
+            {
+                sqlstr += " AND B.businessid IN (SELECT businessID FROM AttributesTable as A WHERE A.att_name = 'RestaurantsPriceRange2' AND A.value = '1')";
+            }
+            if ((bool)twoCheckBox.IsChecked) 
+            {
+                sqlstr += " AND B.businessid IN (SELECT businessID FROM AttributesTable as A WHERE A.att_name = 'RestaurantsPriceRange2' AND A.value = '2')";
+            }
+            if ((bool)threeCheckBox.IsChecked) 
+            {
+                sqlstr += " AND B.businessid IN (SELECT businessID FROM AttributesTable as A WHERE A.att_name = 'RestaurantsPriceRange2' AND A.value = '3')";
+            }
+            if ((bool)fourCheckBox.IsChecked) 
+            {
+                sqlstr += " AND B.businessid IN (SELECT businessID FROM AttributesTable as A WHERE A.att_name = 'RestaurantsPriceRange2' AND A.value = '4')";
+            }
+
+            if ((bool)creditCardCheckBox.IsChecked)
+            {
+                sqlstr += " AND B.businessid IN (SELECT businessID FROM AttributesTable as A WHERE A.att_name = 'BusinessAcceptsCreditCards' AND A.value = 'True')";
+            }
+            if ((bool)reservationCheckBox.IsChecked)
+            {
+                sqlstr += " AND B.businessid IN (SELECT businessID FROM AttributesTable as A WHERE A.att_name = 'RestaurantsReservations' AND A.value = 'True')";
+            }
+            if ((bool)wheelchairCheckBox.IsChecked)
+            {
+                sqlstr += " AND B.businessid IN (SELECT businessID FROM AttributesTable as A WHERE A.att_name = 'WheelchairAccessible' AND A.value = 'True')";
+            }
+            if ((bool)outdoorCheckBox.IsChecked)
+            {
+                sqlstr += " AND B.businessid IN (SELECT businessID FROM AttributesTable as A WHERE A.att_name = 'OutdoorSeating' AND A.value = 'True')";
+            }
+            if ((bool)kidsCheckBox.IsChecked)
+            {
+                sqlstr += " AND B.businessid IN (SELECT businessID FROM AttributesTable as A WHERE A.att_name = 'GoodForKids' AND A.value = 'True')";
+            }
+            if ((bool)groupsCheckBox.IsChecked)
+            {
+                sqlstr += " AND B.businessid IN (SELECT businessID FROM AttributesTable as A WHERE A.att_name = 'RestaurantsGoodForGroups' AND A.value = 'True')";
+            }
+            if ((bool)deliveryCheckBox.IsChecked)
+            {
+                sqlstr += " AND B.businessid IN (SELECT businessID FROM AttributesTable as A WHERE A.att_name = 'RestaurantsDelivery' AND A.value = 'True')";
+            }
+            if ((bool)takeoutCheckBox.IsChecked)
+            {
+                sqlstr += " AND B.businessid IN (SELECT businessID FROM AttributesTable as A WHERE A.att_name = 'RestaurantsTakeOut' AND A.value = 'True')";
+            }
+            if ((bool)wifiCheckBox.IsChecked)
+            {
+                sqlstr += " AND B.businessid IN (SELECT businessID FROM AttributesTable as A WHERE A.att_name = 'WiFi' AND A.value = 'True')";
+            }
+            if ((bool)bikeCheckBox.IsChecked)
+            {
+                sqlstr += " AND B.businessid IN (SELECT businessID FROM AttributesTable as A WHERE A.att_name = 'BikeParking' AND A.value = 'True')";
+            }
+
+            if ((bool)breakfastCheckBox.IsChecked)
+            {
+                sqlstr += " AND B.businessid IN (SELECT businessID FROM AttributesTable as A WHERE A.att_name = 'breakfast' AND A.value = 'True')";
+            }
+            if ((bool)lunchCheckBox.IsChecked)
+            {
+                sqlstr += " AND B.businessid IN (SELECT businessID FROM AttributesTable as A WHERE A.att_name = 'lunch' AND A.value = 'True')";
+            }
+            if ((bool)brunchCheckBox.IsChecked)
+            {
+                sqlstr += " AND B.businessid IN (SELECT businessID FROM AttributesTable as A WHERE A.att_name = 'brunch' AND A.value = 'True')";
+            }
+            if ((bool)dinnerCheckBox.IsChecked)
+            {
+                sqlstr += " AND B.businessid IN (SELECT businessID FROM AttributesTable as A WHERE A.att_name = 'dinner' AND A.value = 'True')";
+            }
+            if ((bool)dessertCheckBox.IsChecked)
+            {
+                sqlstr += " AND B.businessid IN (SELECT businessID FROM AttributesTable as A WHERE A.att_name = 'dessert' AND A.value = 'True')";
+            }
+            if ((bool)lateNightCheckBox.IsChecked)
+            {
+                sqlstr += " AND B.businessid IN (SELECT businessID FROM AttributesTable as A WHERE A.att_name = 'latenight' AND A.value = 'True')";
+            }
+
+            //attName IN (a1,a2,a3,a4,a5,a6,a7,a8,a9)     CASE1
+            //attName=a1 AND attName=a2                 CASE2
+
+            executeQuery(sqlstr, queryBusinessSearchResult);
 
             //Call execute Query with BusinessQuery --> QUITE EXPENSIVE HERE;)
         }
@@ -1047,6 +1216,12 @@ namespace YelpProject
 
             Application.Current.Shutdown();
         }
-
     }
+
+    //var uCoord = new GeoCoordinate(uLat, uLong);
+    //var bCoord = new GeoCoordinate(bLat, bLong);
+    //var distanceMeters = uCoord.GetDistanceTo(bCoord);
+    //var miles = distanceMeters * 0.00062137;
+    //return busDis = miles;
+
 }
