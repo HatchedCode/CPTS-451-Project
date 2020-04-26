@@ -79,9 +79,9 @@ namespace YelpProject
         private void busTipsDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             //Clear the ResultsBox
-            busTipsDataGrid.Items.Clear();
+            //busTipsDataGrid.Items.Clear();
 
-            string sqlstr = "SELECT T.date, U.name, T.likes, T.text FROM TipTable as T, UserTable as U WHERE U.user_id = T.user_id and T.businessid = '5KheTjYPu1HcQzQFtm4_vw'"; //5KheTjYPu1HcQzQFtm4_vw
+            string sqlstr = "SELECT T.date, U.name, T.likes, T.text FROM TipTable as T, UserTable as U WHERE U.user_id = T.user_id and T.businessid = '5KheTjYPu1HcQzQFtm4_vw'"; //5KheTjYPu1HcQzQFtm4_vw for testing
             executeQuery(sqlstr, queryBusinessTipResult);
         }
 

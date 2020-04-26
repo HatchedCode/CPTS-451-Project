@@ -6,9 +6,9 @@ namespace YelpEngine
 {
     public class Hours
     {
-        private string t_start;
-        private string t_end;
-        private string h_day;
-        private string businessID;
+        public string t_start;
+        public string t_end;
+        public string h_day;
+        public string businessID;
     }
 }

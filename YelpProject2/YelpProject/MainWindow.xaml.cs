@@ -559,8 +559,15 @@ namespace YelpProject
 
                 //Update the selected business -->NEED TO WRITE THE QUERIES FOR THESE
                 setSelectedBusinessInformation(selectedBusiness.name, selectedBusiness.address);
+
+                DayOfWeek wk = DateTime.Today.DayOfWeek; // current real life day of the week
+
+                string sqlstr = "SELECT H.h_day, H.t_start, H.t_end FROM HoursTable as H WHERE H.businessID = '" + selectedBusiness.bid + "' AND H.h_day = '" + wk + "'";
+                executeQuery(sqlstr, setHours);
+
                 setSelectedBusinessCategories(selectedBusiness.bid);
                 setSelectedBusinessAttributes(selectedBusiness.bid);
+                
             }
 
         }
@@ -587,17 +594,24 @@ namespace YelpProject
             //This information we can get from the businessDataGrid
 
             //Bus name
-            busNamelabel.Content = "Business Name: ";
+            busNamelabel.Content = "Business Name: " + name;
             //adress
-            busaddlabel.Content = "Address: ";
+            busaddlabel.Content = "Address: " + address;
         }
 
         private void setHours(NpgsqlDataReader R)
         {
             //Notice that in the original query we are passing in the real date
 
+
+            //new Hours() { t_start = R.GetValue(0).ToString() });
+
+            string h_day = R.GetValue(0).ToString();
+            string t_start = R.GetValue(1).ToString();
+            string t_end = R.GetValue(2).ToString();
+
             //Date
-            operationslabel.Content = "Today(day):  Opens:    Closes:";
+            operationslabel.Content = "Today (" + h_day +")" + " Opens: " + t_start.Replace(":0", ":00") + " Closes: "+ t_end.Replace(":0", ":00"); 
         }
 
         private void setSelectedBusinessCategories(string business_id)
@@ -675,16 +689,17 @@ namespace YelpProject
         {
             //Disbale Buttons
             disableCurrentUserInfo();
-            Double newLong = Convert.ToDouble(longtextBox.Text);
-            Double newLat = Convert.ToDouble(lattextBox.Text);
-
             //Check the old information with the new information, if same{do nothing} else{update}
 
             //Update the information on the SQL database
             if(setUserDataGrid.SelectedIndex > -1)
             {
                 string user_id = (setUserDataGrid.SelectedItem as User).id;
-                string sqlStr = "UPDATE User SET longitude = '" + longtextBox.Text + "' latitude = '" + lattextBox.Text + "' WHERE userID = '" + user_id + "'";
+                string sqlStr = "UPDATE UserTable SET longitude = '" + longtextBox.Text + "', latitude = '" + lattextBox.Text + "' WHERE user_id = '" + user_id + "'"; //PPfsXILiyBNjNEJrgeMyeA
+                executeQuery(sqlStr, queryUser);
+
+                setUserDataGrid.Items.Clear();
+                addUsers();
             }
             else
             {
@@ -880,6 +895,7 @@ namespace YelpProject
                 setUserStars(curUser.avg_stars, curUser.fans);
                 setUserVotes(curUser.funny, curUser.cool, curUser.useful);
                 setUserTips(curUser.tipcount, curUser.likecount);
+                setUserLocation(curUser.longitude, curUser.latitude);
 
                 //Query Friends
                 string sqlstr = "SELECT * FROM UserTable WHERE user_id IN (SELECT friend_user_id FROM FriendTable WHERE current_user_id = '" + curUser.id + "') ORDER BY user_id";
