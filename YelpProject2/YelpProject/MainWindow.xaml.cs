@@ -442,11 +442,11 @@ namespace YelpProject
             //0-User Name   1-Business  2-City  3-Text  4-Date
             Tip newTipFriend = new Tip()
             {
-                user_name = R.GetString(0),
-                bus_name = R.GetString(1),
-                bus_city = R.GetString(2),
-                text=R.GetString(3),
-                date=R.GetString(4)
+                user_name = R.GetValue(0).ToString(),
+                bus_name = R.GetValue(1).ToString(),
+                bus_city = R.GetValue(2).ToString(),
+                text= R.GetValue(3).ToString(),
+                date= R.GetValue(4).ToString()
             };
 
             latestFriendTipsDataGrid.Items.Add(newTipFriend);
@@ -935,7 +935,8 @@ namespace YelpProject
                 executeQuery(sqlstr, queryUserFriends);
 
                 // Tips of Friends
-
+                string sqlstr2 = "select U.friendName, B.busName, B.busCity, U.text, U.ldate from BusinessTable as B, (select * from(SELECT user_id as friendID, name as friendName FROM UserTable WHERE user_id IN(SELECT friend_user_id FROM FriendTable WHERE current_user_id = '"+ curUser.id + "')) as F, (select * from TipTable as t1 join (select user_id as tipuID, max(date) as ldate from TipTable group by user_id) as t2 on t1.user_id = t2.tipuID and t1.date = t2.ldate) as R where R.user_id = F.friendID) as U where B.businessID = U.businessID; ";
+                executeQuery(sqlstr2, queryUserTipFriends);
             }
         }
 
