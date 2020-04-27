@@ -27,6 +27,9 @@ namespace YelpProject
             InitializeComponent();
             initializeAll();
             clearUserInformation();
+
+            zipcodeListBox.SelectionMode = SelectionMode.Extended;
+            cityListBox.SelectionMode = SelectionMode.Extended;
         }
 
         private void addCheckBoxes()
@@ -65,7 +68,7 @@ namespace YelpProject
             addColumns2UserFriendsGrid();
             addColumns2SelectedBusinessAttributes();
             addColumns2SelectedBusinessCategories();
-            addColumns2UserTipsGrid();
+            //addColumns2UserTipsGrid();
             addColumns2UserFriendsTipsGrid();
             addStates();
             addUsers();
@@ -210,10 +213,10 @@ namespace YelpProject
             col3.Header = "Avg Stars";
             col4.Header = "Yelping Since";
 
-            col1.Width = 200;
-            col2.Width = 70;
-            col3.Width = 50;
-            col4.Width = 100;
+            col1.Width = 150;
+            col2.Width = 100;
+            col3.Width = 70;
+            col4.Width = 200;
 
             friendDataGrid.Columns.Add(col1);
             friendDataGrid.Columns.Add(col2);
@@ -246,13 +249,13 @@ namespace YelpProject
             col2.Header = "Business Name";
             col3.Header = "City";
             col4.Header = "Text";
-            col4.Header = "Date";
+            col5.Header = "Date";
 
-            col1.Width = 200;
-            col2.Width = 70;
-            col3.Width = 70;
-            col4.Width = 100;
-            col5.Width = 70;
+            col1.Width = 100;
+            col2.Width = 150;
+            col3.Width = 100;
+            col4.Width = 350;
+            col5.Width = 100;
 
             latestFriendTipsDataGrid.Columns.Add(col1);
             latestFriendTipsDataGrid.Columns.Add(col2);
@@ -315,45 +318,45 @@ namespace YelpProject
             //businessDataGrid.SelectionMode = DataGridSelectionMode.Single;
         }
 
-        private void addColumns2UserTipsGrid()
-        {
-            DataGridTextColumn col1 = new DataGridTextColumn(); // user_name
-            DataGridTextColumn col2 = new DataGridTextColumn(); // bus_name
-            DataGridTextColumn col3 = new DataGridTextColumn(); // City
-            DataGridTextColumn col4 = new DataGridTextColumn(); // Text
-            DataGridTextColumn col5 = new DataGridTextColumn(); // date
+        //private void addColumns2UserTipsGrid()
+        //{
+        //    DataGridTextColumn col1 = new DataGridTextColumn(); // user_name
+        //    DataGridTextColumn col2 = new DataGridTextColumn(); // bus_name
+        //    DataGridTextColumn col3 = new DataGridTextColumn(); // City
+        //    DataGridTextColumn col4 = new DataGridTextColumn(); // Text
+        //    DataGridTextColumn col5 = new DataGridTextColumn(); // date
 
-            col1.Binding = new Binding("user_name");
-            col2.Binding = new Binding("bus_name");
-            col3.Binding = new Binding("city");
-            col4.Binding = new Binding("text");
-            col5.Binding = new Binding("date");
+        //    col1.Binding = new Binding("user_name");
+        //    col2.Binding = new Binding("bus_name");
+        //    col3.Binding = new Binding("city");
+        //    col4.Binding = new Binding("text");
+        //    col5.Binding = new Binding("date");
 
 
-            col1.Header = "User Name";
-            col2.Header = "Business";
-            col3.Header = "City";
-            col4.Header = "Text";
-            col5.Header = "Date";
+        //    col1.Header = "User Name";
+        //    col2.Header = "Business";
+        //    col3.Header = "City";
+        //    col4.Header = "Text";
+        //    col5.Header = "Date";
 
-            col1.Width = 100;
-            col2.Width = 100;
-            col3.Width = 50;
-            col4.Width = 300;
-            col5.Width = 100;
+        //    col1.Width = 100;
+        //    col2.Width = 100;
+        //    col3.Width = 50;
+        //    col4.Width = 300;
+        //    col5.Width = 100;
 
-            latestFriendTipsDataGrid.Columns.Add(col1);
-            latestFriendTipsDataGrid.Columns.Add(col2);
-            latestFriendTipsDataGrid.Columns.Add(col3);
-            latestFriendTipsDataGrid.Columns.Add(col4);
-            latestFriendTipsDataGrid.Columns.Add(col5);
+        //    latestFriendTipsDataGrid.Columns.Add(col1);
+        //    latestFriendTipsDataGrid.Columns.Add(col2);
+        //    latestFriendTipsDataGrid.Columns.Add(col3);
+        //    latestFriendTipsDataGrid.Columns.Add(col4);
+        //    latestFriendTipsDataGrid.Columns.Add(col5);
 
-            latestFriendTipsDataGrid.CanUserResizeColumns = false;
-            latestFriendTipsDataGrid.CanUserResizeRows = false;
-            latestFriendTipsDataGrid.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
-            latestFriendTipsDataGrid.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
-            latestFriendTipsDataGrid.SelectionMode = DataGridSelectionMode.Single;
-        }
+        //    latestFriendTipsDataGrid.CanUserResizeColumns = false;
+        //    latestFriendTipsDataGrid.CanUserResizeRows = false;
+        //    latestFriendTipsDataGrid.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
+        //    latestFriendTipsDataGrid.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+        //    latestFriendTipsDataGrid.SelectionMode = DataGridSelectionMode.Single;
+        //}
 
 
         private void addColumns2UserGrid()
@@ -457,15 +460,20 @@ namespace YelpProject
 
         private void queryBusinessSearchResult(NpgsqlDataReader R)
         {
-            string calculated_distance = "N/A";
+            string calculated_distance = "0";
             //businessDataGrid.Items.Add(new Business() { name = R.GetString(0), bid = R.GetString(1) }); GetValue(0).ToString()
             if(setUserDataGrid.SelectedIndex > -1)
             {
                 string sqlstr = "SELECT getDistance('" + R.GetValue(9).ToString() + "','" + R.GetValue(8).ToString()+ "','" + (setUserDataGrid.SelectedItem as User).latitude + "','" + (setUserDataGrid.SelectedItem as User).longitude+ "')";
                 calculated_distance = this.executeSingleQuery(sqlstr);
             }
+            else
+            {
+                calculated_distance = "-----";
+            }
 
             businessDataGrid.Items.Add(new Business() { bid = R.GetValue(7).ToString(), name = R.GetValue(0).ToString(), address = R.GetValue(1).ToString(), city = R.GetValue(2).ToString(), state = R.GetValue(3).ToString(), stars = R.GetValue(4).ToString(), numTips = R.GetValue(5).ToString(), numCheckins = R.GetValue(6).ToString(), distance = calculated_distance });
+
         }
 
 
@@ -593,7 +601,7 @@ namespace YelpProject
             busaddlabel.Content = "Address: ";
 
             //Date
-            operationslabel.Content = "Today(day):  Opens:    Closes:";
+            operationslabel.Content = "Today (Closed):  Opens: --:---   Closes: --:--";
 
             //Categories
             categoryDataGrid.Items.Clear();
