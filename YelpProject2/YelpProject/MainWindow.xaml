@@ -8,7 +8,7 @@
         Title="Yelp App" Height="982.958" Width="1854.754" ResizeMode="NoResize" Closing="Window_Closing">
     <Grid Margin="0,0,-6,-3" Height="957" VerticalAlignment="Top">
         <TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="957" VerticalAlignment="Top" Width="1852" Margin="0,0,-7,0">
-            <TabItem Header="User Information">
+            <TabItem Header="User Information" Height="24" VerticalAlignment="Bottom">
                 <Grid Background="#FFE5E5E5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="490*"/>

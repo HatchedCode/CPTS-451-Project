@@ -9,13 +9,13 @@
     <Grid>
         <GroupBox x:Name="newTipGroupBox" Header="New Tip" HorizontalAlignment="Left" Height="146" Margin="35,10,0,0" VerticalAlignment="Top" Width="1559">
             <Grid HorizontalAlignment="Left" Height="119" Margin="4,0,0,0" VerticalAlignment="Top" Width="1539">
-                <TextBox x:Name="newTipTextBox" HorizontalAlignment="Left" Height="99" Margin="0,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="1529" TextChanged="newTipTextBox_TextChanged"/>
+                <TextBox x:Name="newTipTextBox" HorizontalAlignment="Left" Height="99" Margin="0,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="1529"/>
             </Grid>
         </GroupBox>
         <Button x:Name="addNewTipbutton" Content="Add Tip" HorizontalAlignment="Left" Height="98" Margin="1661,34,0,0" VerticalAlignment="Top" Width="142" Click="addNewTipbutton_Click"/>
         <GroupBox x:Name="busTipsGroupBox" Header="Business Tips" HorizontalAlignment="Left" Height="444" Margin="35,178,0,0" VerticalAlignment="Top" Width="1559">
             <Grid HorizontalAlignment="Left" Height="399" Margin="10,10,0,0" VerticalAlignment="Top" Width="1533">
-                <DataGrid x:Name="busTipsDataGrid" HorizontalAlignment="Left" Height="389" VerticalAlignment="Top" Width="1523" SelectionChanged="busTipsDataGrid_SelectionChanged"/>
+                <DataGrid x:Name="busTipsDataGrid" HorizontalAlignment="Left" Height="389" VerticalAlignment="Top" Width="1523"/>
             </Grid>
         </GroupBox>
         <GroupBox x:Name="friendTipsGroupBox" Header="Friends who reviewed this business" HorizontalAlignment="Left" Height="304" Margin="34,640,0,0" VerticalAlignment="Top" Width="1560">
@@ -23,6 +23,7 @@
                 <DataGrid x:Name="friendTipsDataGrid" HorizontalAlignment="Left" Height="267" VerticalAlignment="Top" Width="1534"/>
             </Grid>
         </GroupBox>
+        <Button x:Name="likeTipButton" Content="Like Tip" HorizontalAlignment="Left" Height="105" Margin="1661,265,0,0" VerticalAlignment="Top" Width="142" Click="likeTipButton_Click"/>
 
     </Grid>
 </Window>

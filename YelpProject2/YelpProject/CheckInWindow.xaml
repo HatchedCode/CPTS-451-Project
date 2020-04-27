@@ -6,16 +6,21 @@
         xmlns:local="clr-namespace:YelpProject"
         xmlns:chartingToolkit="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit" x:Class="YelpProject.CheckInWindow"
         mc:Ignorable="d"
-        Title="CheckInWindow" Height="982.958" Width="1854.754" ResizeMode="NoResize">
+        Title="CheckInWindow" Height="982.958" Width="1854.754" ResizeMode="CanResize">
     <Grid>
-        <Button x:Name="checkInButton" Content="Check In" HorizontalAlignment="Left" Height="116" Margin="1707,400,0,0" VerticalAlignment="Top" Width="132"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="168*"/>
+            <ColumnDefinition Width="1681*"/>
+        </Grid.ColumnDefinitions>
+        <Button x:Name="checkInButton" Content="Check In" HorizontalAlignment="Left" Height="116" Margin="1539,400,0,0" VerticalAlignment="Top" Width="132" Click="checkInButton_Click" Grid.Column="1"/>
 
-        <chartingToolkit:Chart Title="Checkin Chart"  Name ="checkChart" HorizontalAlignment="Left" VerticalAlignment="Top" Height="954" Width="1655">
+        <chartingToolkit:Chart Title="Checkin Chart"  Name ="checkChart" HorizontalAlignment="Left" VerticalAlignment="Top" Height="954" Width="1655" Grid.ColumnSpan="2">
             <chartingToolkit:Chart.DataContext>
                 <PointCollection>1,10 2,20 3,30 4,40</PointCollection>
             </chartingToolkit:Chart.DataContext>
-            <chartingToolkit:ColumnSeries DependentValuePath="Value" IndependentValuePath="Key" ItemsSource="{Binding}" Title="My Data" HorizontalAlignment="Left" Height="861" VerticalAlignment="Top" Width="1525"/>
+            <chartingToolkit:ColumnSeries DependentValuePath="Value" IndependentValuePath="Key" ItemsSource="{Binding}" Title="checkin count" HorizontalAlignment="Right" Height="861" VerticalAlignment="Top" Width="1525" Margin="0,0,-32,-16"/>
         </chartingToolkit:Chart>
+        <CheckBox x:Name="checkBox" Content="CheckBox" HorizontalAlignment="Left" Height="100" Margin="398,982,0,-128" VerticalAlignment="Top" Grid.Column="1"/>
 
     </Grid>
 </Window>

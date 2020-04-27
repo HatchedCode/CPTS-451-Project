@@ -16,8 +16,8 @@ namespace YelpProject
     /// </summary>
     public partial class MainWindow : Window
     {
-        private TipsWindow tipWindow = new TipsWindow();
-        private CheckInWindow checkInWindow = new CheckInWindow();
+        private TipsWindow tipWindow;// = new TipsWindow("", "");
+        private CheckInWindow checkInWindow;// = new CheckInWindow("");
         private bool tipsWindowIsOpen = false;
         private bool checkinWindowIsOpen = false;
         private List<string> checkboxInfo = new List<string>();
@@ -25,6 +25,7 @@ namespace YelpProject
         {
             InitializeComponent();
             initializeAll();
+            clearUserInformation();
         }
 
         private void addCheckBoxes()
@@ -694,12 +695,24 @@ namespace YelpProject
             //Update the information on the SQL database
             if(setUserDataGrid.SelectedIndex > -1)
             {
-                string user_id = (setUserDataGrid.SelectedItem as User).id;
-                string sqlStr = "UPDATE UserTable SET longitude = '" + longtextBox.Text + "', latitude = '" + lattextBox.Text + "' WHERE user_id = '" + user_id + "'"; //PPfsXILiyBNjNEJrgeMyeA
-                executeQuery(sqlStr, queryUser);
+                if(longtextBox.Text.Trim().Length > 0 || lattextBox.Text.Trim().Length > 0)
+                {
+                    if (double.TryParse(longtextBox.Text, out double longitude) && double.TryParse(lattextBox.Text, out double latitude))
+                    {
+                        string user_id = (setUserDataGrid.SelectedItem as User).id;
+                        string sqlStr = "UPDATE UserTable SET longitude = '" + longitude + "', latitude = '" + latitude + "' WHERE user_id = '" + user_id + "'"; //PPfsXILiyBNjNEJrgeMyeA
+                        executeQuery(sqlStr, queryUser);
 
-                setUserDataGrid.Items.Clear();
-                addUsers();
+                        //setUserDataGrid.Items.Clear();
+                        //addUsers();
+                        
+                    }
+                    else
+                    {
+                        MessageBox.Show("Was not able to parse the lat/long as double type");
+                    }
+
+                }
             }
             else
             {
@@ -945,9 +958,17 @@ namespace YelpProject
             }
             else
             {
-                checkinWindowIsOpen = true;
-                checkInWindow.ShowDialog();
-                checkinWindowIsOpen = false;
+                if(this.businessDataGrid.SelectedIndex > -1)
+                {
+                    checkinWindowIsOpen = true;
+                    this.checkInWindow = new CheckInWindow((businessDataGrid.SelectedItem as Business).bid);
+                    checkInWindow.ShowDialog();
+                    checkinWindowIsOpen = false;
+                }
+                else
+                {
+                    MessageBox.Show("No business selected", "Error Opening New Checkin Window.", MessageBoxButton.OK);
+                }
             }
         }
 
@@ -960,9 +981,17 @@ namespace YelpProject
             }
             else
             {
-                tipsWindowIsOpen = true;
-                tipWindow.ShowDialog();
-                tipsWindowIsOpen = false;
+                if (this.businessDataGrid.SelectedIndex > -1 && this.setUserDataGrid.SelectedIndex > -1)
+                {
+                    tipsWindowIsOpen = true;
+                    this.tipWindow = new TipsWindow((businessDataGrid.SelectedItem as Business).bid, (this.setUserDataGrid.SelectedItem as User).id);
+                    tipWindow.ShowDialog();
+                    tipsWindowIsOpen = false;
+                }
+                else
+                {
+                    MessageBox.Show("No business or user selected", "Error Opening New Tip Window.", MessageBoxButton.OK);
+                }
             }
         }
 
@@ -1043,7 +1072,7 @@ namespace YelpProject
         }
 
 
-        private string buildConnectionString(string host = "localhost", string username = "postgres", string database = "yelpdb", string password = "0622")
+        private string buildConnectionString(string host = "localhost", string username = "postgres", string database = "yelpdb", string password = "postgres")
         {
             return "Host = " + host + "; Username = " + username + "; Database = " + database + "; password = " + password + ";";
         }
@@ -1062,6 +1091,37 @@ namespace YelpProject
                         var reader = cmd.ExecuteReader();
                         while (reader.Read())
                             myfunc(reader);
+                    }
+                    catch (NpgsqlException ex)
+                    {
+                        Console.WriteLine(ex.Message.ToString());
+                        System.Windows.MessageBox.Show("SQL Error - " + ex.Message.ToString());
+                    }
+                    finally
+                    {
+                        connection.Close();
+                    }
+
+                }
+            }
+        }
+
+        private void executeNonQuery(string sqlstr)
+        {
+            using (var connection = new NpgsqlConnection(buildConnectionString()))
+            {
+                connection.Open();
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+                    cmd.CommandText = sqlstr;
+                    try
+                    {
+                        int insertion = cmd.ExecuteNonQuery();
+                        if (insertion < 0) //Error
+                        {
+                            System.Windows.MessageBox.Show("SQL ExecuteNonQuery Error - ");
+                        }
                     }
                     catch (NpgsqlException ex)
                     {
