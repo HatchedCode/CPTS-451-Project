@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Linq;
 using YelpEngine;
 
 namespace YelpProject
@@ -72,6 +73,7 @@ namespace YelpProject
             cityListBox.SelectionMode = SelectionMode.Multiple;
             zipcodeListBox.SelectionMode = SelectionMode.Multiple;
             busCategorylistBox.SelectionMode = SelectionMode.Multiple;
+            addSortResultsByItems();
         }
 
         private void queryStates(NpgsqlDataReader R)
@@ -499,13 +501,17 @@ namespace YelpProject
         //    executeQuery(sqlstr, queryBusiness);
         //}
 
+         private List<KeyValuePair<string, string>> items = new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>("Business Name (Default)", "busName"),
+                                                                         new KeyValuePair<string, string>("Highest Rating(Stars)", "stars"),
+                                                                         new KeyValuePair<string, string>("Most Tips", "numTips"),
+                                                                         new KeyValuePair<string, string>("Most Check-ins", "numCheckins"),
+                                                                         new KeyValuePair<string, string>("Nearest","near") };
 
         private void addSortResultsByItems()
         {
-            List<string> items = new List<string> { "Business Name (Default)", "Highest Rating(Stars)", "Most Tips", "Most Check-ins", "Nearest" };
-            foreach (string item in items)
+            foreach (KeyValuePair<string, string> item in items)
             {
-                sortResultsByComboBox.Items.Add(item);
+                sortResultsByComboBox.Items.Add(item.Key);
             }
 
         }
@@ -944,10 +950,6 @@ namespace YelpProject
         //}
 
         //Resort the datagrid using the chosen option
-        private void sortResultsByComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
 
         //Show the next window (checkin)
         private void showCheckinsButton_Click(object sender, RoutedEventArgs e)
@@ -1247,6 +1249,23 @@ namespace YelpProject
 
             //attName IN (a1,a2,a3,a4,a5,a6,a7,a8,a9)     CASE1
             //attName=a1 AND attName=a2                 CASE2
+
+            if(sortResultsByComboBox.SelectedIndex > -1)
+            {
+                List<string> val = items.Where(value => value.Key == sortResultsByComboBox.SelectedItem.ToString()).Select(a => a.Value).ToList();
+                if(val[0] == "numTips" || val[0] == "stars" || val[0] == "numCheckins")
+                {
+                    sqlstr += " ORDER BY " + val[0] + "  desc";
+                }
+                else
+                {
+                    sqlstr += " ORDER BY " + val[0];
+                }
+            }
+            else
+            {
+                sqlstr += " ORDER BY busName";
+            }
 
             executeQuery(sqlstr, queryBusinessSearchResult);
 

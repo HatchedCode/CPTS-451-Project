@@ -149,7 +149,7 @@
                     </GroupBox>
                     <GroupBox x:Name="sortResultsBygroupBox" Grid.Column="5" Header="Sort Results By" HorizontalAlignment="Left" Height="71" Margin="1006,329,0,0" VerticalAlignment="Top" Width="292">
                         <Grid HorizontalAlignment="Left" Height="47" Margin="4,2,-1,-1" VerticalAlignment="Top" Width="277">
-                            <ComboBox x:Name="sortResultsByComboBox" HorizontalAlignment="Left" Height="27" Margin="10,10,0,0" VerticalAlignment="Top" Width="257" SelectionChanged="sortResultsByComboBox_SelectionChanged"/>
+                            <ComboBox x:Name="sortResultsByComboBox" HorizontalAlignment="Left" Height="27" Margin="10,10,0,0" VerticalAlignment="Top" Width="257" />
                         </Grid>
                     </GroupBox>
                     <GroupBox x:Name="selectedBusinessGroupBox" Grid.ColumnSpan="3" Header="Selected Business" HorizontalAlignment="Left" Height="352" Margin="144,569,0,0" VerticalAlignment="Top" Width="1324" Grid.Column="3">
