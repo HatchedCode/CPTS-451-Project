@@ -457,8 +457,14 @@ namespace YelpProject
 
         private void queryBusinessSearchResult(NpgsqlDataReader R)
         {
+            string calculated_distance = "N/A";
             //businessDataGrid.Items.Add(new Business() { name = R.GetString(0), bid = R.GetString(1) }); GetValue(0).ToString()
-            string calculated_distance = "FA";
+            if(setUserDataGrid.SelectedIndex > -1)
+            {
+                string sqlstr = "SELECT getDistance('" + R.GetValue(9).ToString() + "','" + R.GetValue(8).ToString()+ "','" + (setUserDataGrid.SelectedItem as User).latitude + "','" + (setUserDataGrid.SelectedItem as User).longitude+ "')";
+                calculated_distance = this.executeSingleQuery(sqlstr);
+            }
+
             businessDataGrid.Items.Add(new Business() { bid = R.GetValue(7).ToString(), name = R.GetValue(0).ToString(), address = R.GetValue(1).ToString(), city = R.GetValue(2).ToString(), state = R.GetValue(3).ToString(), stars = R.GetValue(4).ToString(), numTips = R.GetValue(5).ToString(), numCheckins = R.GetValue(6).ToString(), distance = calculated_distance });
         }
 
@@ -1139,6 +1145,44 @@ namespace YelpProject
             }
         }
 
+        private string executeSingleQuery(string sqlstr)
+        {
+            using (var connection = new NpgsqlConnection(buildConnectionString()))
+            {
+                connection.Open();
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+                    cmd.CommandText = sqlstr;
+                    try
+                    {
+                        var singleValue = cmd.ExecuteReader();
+                        if (singleValue.HasRows)
+                        {
+                            singleValue.Read();
+                            return singleValue.GetValue(0).ToString();
+                        }
+                        else
+                        {
+                            System.Windows.MessageBox.Show("SQL ExecuteSingleQuery Error - ");
+                        }
+                    }
+                    catch (NpgsqlException ex)
+                    {
+                        Console.WriteLine(ex.Message.ToString());
+                        System.Windows.MessageBox.Show("SQL Error - " + ex.Message.ToString());
+                    }
+                    finally
+                    {
+                        connection.Close();
+                    }
+
+                }
+
+            }
+                return "NA";
+        }
+
         private void searchBusinessButton_Click(object sender, RoutedEventArgs e)
         {
             //Clear the ResultsBox
@@ -1147,7 +1191,7 @@ namespace YelpProject
             //Now gather all of the information that we need
             //State,city,postalCode,businessCategory,price, Attributes
             //Groupby: 
-            string sqlstr = "SELECT distinct B.busName, B.busaddress, B.buscity, B.busstate, B.stars, B.numtips, B.numcheckins, B.businessID FROM BusinessTable as B, CategoryTable as C WHERE buspostal = '" + zipcodeListBox.SelectedItem.ToString() + "'";
+            string sqlstr = "SELECT distinct B.busName, B.busaddress, B.buscity, B.busstate, B.stars, B.numtips, B.numcheckins, B.businessID,  B.longitude, B.latitude FROM BusinessTable as B, CategoryTable as C WHERE buspostal = '" + zipcodeListBox.SelectedItem.ToString() + "'";
             for (int i = 0; i < addedCategoriesListBox.Items.Count; i++)
             {
                 sqlstr += " AND B.businessid IN (SELECT businessID FROM CategoryTable as C WHERE C.cat_name = '" + addedCategoriesListBox.Items[i] + "')";
@@ -1312,11 +1356,4 @@ namespace YelpProject
             Application.Current.Shutdown();
         }
     }
-
-    //var uCoord = new GeoCoordinate(uLat, uLong);
-    //var bCoord = new GeoCoordinate(bLat, bLong);
-    //var distanceMeters = uCoord.GetDistanceTo(bCoord);
-    //var miles = distanceMeters * 0.00062137;
-    //return busDis = miles;
-
 }
